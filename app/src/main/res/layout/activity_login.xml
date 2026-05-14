@@ -1,6 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:gravity="center_horizontal">
+
+        <!-- App Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary"
+            android:layout_marginTop="64dp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/slogan"
+            android:textSize="14sp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:layout_marginBottom="48dp"/>
+
+        <!-- Username Field -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/username_field"
+            android:textSize="13sp"
+            android:textColor="?android:attr/textColorHint"
+            android:layout_marginBottom="6dp"/>
+
+        <EditText
+            android:id="@+id/editTextUsername"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="@string/username_hint"
+            android:inputType="text"
+            android:background="@drawable/input_background"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textSize="15sp"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Password Field -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/password_field"
+            android:textSize="13sp"
+            android:textColor="?android:attr/textColorHint"
+            android:layout_marginBottom="6dp"/>
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="@string/password_hint"
+            android:inputType="textPassword"
+            android:background="@drawable/input_background"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textSize="15sp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Email Field  -->
+        <TextView
+            android:id="@+id/labelEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/email_field"
+            android:textSize="13sp"
+            android:textColor="?android:attr/textColorHint"
+            android:layout_marginBottom="6dp"
+            android:visibility="gone"/>
+
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="@string/email_hint"
+            android:inputType="textEmailAddress"
+            android:background="@drawable/input_background"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textSize="15sp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"/>
+
+        <!-- Error Text -->
+        <TextView
+            android:id="@+id/textViewError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="?attr/errorTextColorq"
+            android:textSize="13sp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"/>
+
+        <!-- Login Button -->
+        <Button
+            android:id="@+id/buttonLogin"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="@string/login_button"
+            android:textSize="16sp"
+            android:textColor="?attr/colorPrimaryVariant"
+            android:backgroundTint="?attr/colorSecondary"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Signup Button -->
+        <Button
+            android:id="@+id/buttonSignup"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="@string/signup_button"
+            android:textSize="16sp"
+            android:textColor="?attr/colorSecondary"
+            android:backgroundTint="?attr/colorPrimaryVariant"
+            android:strokeColor="?android:attr/textColorPrimary"
+            android:layout_marginBottom="12dp"/>
+
+    </LinearLayout>
+
+</ScrollView>
