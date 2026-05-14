@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Event Tracker</string>
+    <string name="username_field">Username</string>
+    <string name="username_hint">Enter your username</string>
+    <string name="password_field">Password</string>
+    <string name="password_hint">Enter your password</string>
+    <string name="email_field">Email</string>
+    <string name="email_hint">Enter your email</string>
+    <string name="login_button">Log In</string>
+    <string name="signup_button">Create Account</string>
+    <string name="slogan">Stay on top of what matters</string>
 </resources>
