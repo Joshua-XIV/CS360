@@ -9,4 +9,6 @@
     <string name="login_button">Log In</string>
     <string name="signup_button">Create Account</string>
     <string name="slogan">Stay on top of what matters</string>
+    <string name="signup_confirm_button">Create Account</string>
+    <string name="back_button">Back to Login</string>
 </resources>
