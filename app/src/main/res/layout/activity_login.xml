@@ -102,7 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:textColor="?attr/errorTextColor"
+            android:textColor="?attr/colorError"
             android:textSize="13sp"
             android:layout_marginBottom="16dp"
             android:visibility="gone"/>
@@ -114,7 +114,7 @@
             android:layout_height="56dp"
             android:text="@string/login_button"
             android:textSize="16sp"
-            android:textColor="?attr/colorPrimaryVariant"
+            android:textColor="?attr/colorOnSecondary"
             android:backgroundTint="?attr/colorSecondary"
             android:layout_marginBottom="12dp"/>
 
@@ -125,7 +125,7 @@
             android:layout_height="56dp"
             android:text="@string/signup_button"
             android:textSize="16sp"
-            android:textColor="?attr/colorSecondary"
+            android:textColor="?attr/colorOnPrimary"
             android:backgroundTint="?attr/colorPrimaryVariant"
             android:strokeColor="?android:attr/textColorPrimary"
             android:layout_marginBottom="12dp"/>
