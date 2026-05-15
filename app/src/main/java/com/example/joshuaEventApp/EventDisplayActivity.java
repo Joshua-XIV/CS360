@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
+
 public class EventDisplayActivity extends AppCompatActivity {
     private RecyclerView recycleViewEvents;
     private FloatingActionButton addEvent;
@@ -24,11 +26,23 @@ public class EventDisplayActivity extends AppCompatActivity {
         recycleViewEvents = findViewById(R.id.recyclerViewEvents);
         addEvent = findViewById(R.id.fabAddEvent);
 
-        recycleViewEvents.setLayoutManager(new GridLayoutManager(this, 2));
+        recycleViewEvents.setLayoutManager(new GridLayoutManager(this, 1));
+
+        // load some test events
+        databaseHelper.clearAllEvents();
+        databaseHelper.insertTestEvents(sessionManager.getUserId());
+        loadEvents();
 
         addEvent.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddEventActivity.class);
             startActivity(intent);
         });
+    }
+
+    private void loadEvents() {
+        int userId = sessionManager.getUserId();
+        List<Event> events = databaseHelper.getEventsByUser(userId);
+        EventAdapter adapter = new EventAdapter(events);
+        recycleViewEvents.setAdapter(adapter);
     }
 }
