@@ -29,14 +29,20 @@ public class EventDisplayActivity extends AppCompatActivity {
         recycleViewEvents.setLayoutManager(new GridLayoutManager(this, 1));
 
         // load some test events
-        databaseHelper.clearAllEvents();
-        databaseHelper.insertTestEvents(sessionManager.getUserId());
+        // databaseHelper.clearAllEvents();
+        // databaseHelper.insertTestEvents(sessionManager.getUserId());
         loadEvents();
 
         addEvent.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddEventActivity.class);
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadEvents();
     }
 
     private void loadEvents() {
