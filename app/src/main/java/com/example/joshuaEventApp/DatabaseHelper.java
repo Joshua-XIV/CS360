@@ -159,79 +159,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return events;
     }
 
-    public void insertTestEvents(int userId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        Calendar cal = Calendar.getInstance();
-
-        cal.set(2025, Calendar.JANUARY, 3, 19, 0, 0);
-        values.put(COLUMN_EVENT_TITLE, "Team Meeting");
-        values.put(COLUMN_EVENT_DESC, "Discuss Q3 goals and review project progress with the team");
-        values.put(COLUMN_EVENT_TIMESTAMP, cal.getTimeInMillis());
-        values.put(COLUMN_EVENT_USER_ID, userId);
-        values.put(COLUMN_EVENT_DELETED, 0);
-        db.insert(TABLE_EVENTS, null, values);
-        values.clear();
-
-        cal.set(2025, Calendar.APRIL, 4, 10, 0, 0);
-        values.put(COLUMN_EVENT_TITLE, "Doctor Appointment");
-        values.put(COLUMN_EVENT_DESC, "Annual checkup");
-        values.put(COLUMN_EVENT_TIMESTAMP, cal.getTimeInMillis());
-        values.put(COLUMN_EVENT_USER_ID, userId);
-        values.put(COLUMN_EVENT_DELETED, 0);
-        db.insert(TABLE_EVENTS, null, values);
-        values.clear();
-
-        cal.set(2025, Calendar.JUNE, 25, 18, 0, 0);
-        values.put(COLUMN_EVENT_TITLE, "Birthday Party");
-        values.put(COLUMN_EVENT_DESC, "Sarah's surprise birthday party at the downtown venue");
-        values.put(COLUMN_EVENT_TIMESTAMP, cal.getTimeInMillis());
-        values.put(COLUMN_EVENT_USER_ID, userId);
-        values.put(COLUMN_EVENT_DELETED, 0);
-        db.insert(TABLE_EVENTS, null, values);
-        values.clear();
-
-        cal.set(2025, Calendar.JULY, 2, 18, 0, 0);
-        values.put(COLUMN_EVENT_TITLE, "Birthday Party 2");
-        values.put(COLUMN_EVENT_DESC, "Sarah's surprise birthday party at the downtown venue");
-        values.put(COLUMN_EVENT_TIMESTAMP, cal.getTimeInMillis());
-        values.put(COLUMN_EVENT_USER_ID, userId);
-        values.put(COLUMN_EVENT_DELETED, 0);
-        db.insert(TABLE_EVENTS, null, values);
-        values.clear();
-
-        cal.set(2025, Calendar.NOVEMBER, 12, 18, 0, 0);
-        values.put(COLUMN_EVENT_TITLE, "Birthday Party 3");
-        values.put(COLUMN_EVENT_DESC, "Sarah's surprise birthday party at the downtown venue");
-        values.put(COLUMN_EVENT_TIMESTAMP, cal.getTimeInMillis());
-        values.put(COLUMN_EVENT_USER_ID, userId);
-        values.put(COLUMN_EVENT_DELETED, 0);
-        db.insert(TABLE_EVENTS, null, values);
-        values.clear();
-
-        cal.set(2026, Calendar.DECEMBER, 20, 18, 0, 0);
-        values.put(COLUMN_EVENT_TITLE, "Birthday Party 4");
-        values.put(COLUMN_EVENT_DESC, "Sarah's surprise birthday party at the downtown venue");
-        values.put(COLUMN_EVENT_TIMESTAMP, cal.getTimeInMillis());
-        values.put(COLUMN_EVENT_USER_ID, userId);
-        values.put(COLUMN_EVENT_DELETED, 0);
-        db.insert(TABLE_EVENTS, null, values);
-        values.clear();
-
-        cal.set(2027, Calendar.MAY, 6, 18, 0, 0);
-        values.put(COLUMN_EVENT_TITLE, "Birthday Party 5");
-        values.put(COLUMN_EVENT_DESC, "Sarah's surprise birthday party at the downtown venue");
-        values.put(COLUMN_EVENT_TIMESTAMP, cal.getTimeInMillis());
-        values.put(COLUMN_EVENT_USER_ID, userId);
-        values.put(COLUMN_EVENT_DELETED, 0);
-        db.insert(TABLE_EVENTS, null, values);
-    }
-
+    /*
+    DEBUG ONLY
     public void clearAllEvents() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_EVENTS, null, null);
-    }
+    }*/
 
     public boolean addEvent(String title, String description, long timestamp, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -243,6 +176,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_EVENT_DELETED, 0);
         long result = db.insert(TABLE_EVENTS, null, values);
         return result != -1;
+    }
+
+    public boolean deleteEvent(int eventId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_EVENT_DELETED, 1);
+        int rows = db.update(TABLE_EVENTS, values, COLUMN_EVENT_ID + "=?",
+                new String[]{String.valueOf(eventId)});
+        return rows > 0;
     }
 
     private String generateSalt() {
