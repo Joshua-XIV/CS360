@@ -10,25 +10,21 @@ public class Event {
     private final int id;
     private String title;
     private String description;
-    private String date;
-    private String time;
+    private long timestamp;
     private final int userId;
 
     public Event(int id, String title,
-                 String description, String date,
-                 String time, int userId) {
+                 String description, long timestamp, int userId) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.date = date;
-        this.time = time;
+        this.timestamp = timestamp;
         this.userId = userId;
     }
 
     public int getId() { return id; }
     public String getTitle() { return title; }
     public String getDescription() { return description; }
-    public String getDate() { return date; }
-    public String getTime() { return time; }
+    public long getTimestamp() { return timestamp; }
     public int getUserId() { return userId; }
 }
