@@ -13,11 +13,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "eventtracker.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Users table
     public static final String TABLE_USERS = "users";
@@ -32,8 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_EVENT_ID = "id";
     public static final String COLUMN_EVENT_TITLE = "title";
     public static final String COLUMN_EVENT_DESC = "description";
-    public static final String COLUMN_EVENT_DATE = "date";
-    public static final String COLUMN_EVENT_TIME = "time";
+    public static final String COLUMN_EVENT_TIMESTAMP = "timestamp";
     public static final String COLUMN_EVENT_USER_ID = "user_id";
     public static final String COLUMN_EVENT_DELETED = "deleted";
 
@@ -54,8 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_EVENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_EVENT_TITLE + " TEXT, " +
                 COLUMN_EVENT_DESC + " TEXT, " +
-                COLUMN_EVENT_DATE + " TEXT, " +
-                COLUMN_EVENT_TIME + " TEXT, " +
+                COLUMN_EVENT_TIMESTAMP + " INTEGER, " +
                 COLUMN_EVENT_USER_ID + " INTEGER, " +
                 COLUMN_EVENT_DELETED + " INTEGER DEFAULT 0)";
 
@@ -143,15 +142,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_EVENT_USER_ID + "=? AND " + COLUMN_EVENT_DELETED + "=0",
                 new String[]{String.valueOf(userId)},
                 null, null,
-                COLUMN_EVENT_DATE + " ASC");
+                COLUMN_EVENT_TIMESTAMP + " ASC");
 
         while (cursor.moveToNext()) {
             Event event = new Event(
                     cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_EVENT_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EVENT_TITLE)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EVENT_DESC)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EVENT_DATE)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EVENT_TIME)),
+                    cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_EVENT_TIMESTAMP)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_EVENT_USER_ID))
             );
             events.add(event);
@@ -165,60 +163,66 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
+        Calendar cal = Calendar.getInstance();
+
+        cal.set(2025, Calendar.JANUARY, 3, 19, 0, 0);
         values.put(COLUMN_EVENT_TITLE, "Team Meeting");
         values.put(COLUMN_EVENT_DESC, "Discuss Q3 goals and review project progress with the team");
-        values.put(COLUMN_EVENT_DATE, "03/01/2025");
-        values.put(COLUMN_EVENT_TIME, "7:00 PM");
+        values.put(COLUMN_EVENT_TIMESTAMP, cal.getTimeInMillis());
         values.put(COLUMN_EVENT_USER_ID, userId);
         values.put(COLUMN_EVENT_DELETED, 0);
         db.insert(TABLE_EVENTS, null, values);
         values.clear();
 
+        cal.set(2025, Calendar.APRIL, 4, 10, 0, 0);
         values.put(COLUMN_EVENT_TITLE, "Doctor Appointment");
         values.put(COLUMN_EVENT_DESC, "Annual checkup");
-        values.put(COLUMN_EVENT_DATE, "15/01/2025");
-        values.put(COLUMN_EVENT_TIME, "10:00 AM");
+        values.put(COLUMN_EVENT_TIMESTAMP, cal.getTimeInMillis());
         values.put(COLUMN_EVENT_USER_ID, userId);
         values.put(COLUMN_EVENT_DELETED, 0);
         db.insert(TABLE_EVENTS, null, values);
         values.clear();
 
+        cal.set(2025, Calendar.JUNE, 25, 18, 0, 0);
         values.put(COLUMN_EVENT_TITLE, "Birthday Party");
         values.put(COLUMN_EVENT_DESC, "Sarah's surprise birthday party at the downtown venue");
-        values.put(COLUMN_EVENT_DATE, "20/01/2025");
-        values.put(COLUMN_EVENT_TIME, "6:00 PM");
+        values.put(COLUMN_EVENT_TIMESTAMP, cal.getTimeInMillis());
         values.put(COLUMN_EVENT_USER_ID, userId);
         values.put(COLUMN_EVENT_DELETED, 0);
         db.insert(TABLE_EVENTS, null, values);
+        values.clear();
 
+        cal.set(2025, Calendar.JULY, 2, 18, 0, 0);
         values.put(COLUMN_EVENT_TITLE, "Birthday Party 2");
         values.put(COLUMN_EVENT_DESC, "Sarah's surprise birthday party at the downtown venue");
-        values.put(COLUMN_EVENT_DATE, "20/01/2025");
-        values.put(COLUMN_EVENT_TIME, "6:00 PM");
+        values.put(COLUMN_EVENT_TIMESTAMP, cal.getTimeInMillis());
         values.put(COLUMN_EVENT_USER_ID, userId);
         values.put(COLUMN_EVENT_DELETED, 0);
         db.insert(TABLE_EVENTS, null, values);
+        values.clear();
 
+        cal.set(2025, Calendar.NOVEMBER, 12, 18, 0, 0);
         values.put(COLUMN_EVENT_TITLE, "Birthday Party 3");
         values.put(COLUMN_EVENT_DESC, "Sarah's surprise birthday party at the downtown venue");
-        values.put(COLUMN_EVENT_DATE, "20/01/2025");
-        values.put(COLUMN_EVENT_TIME, "6:00 PM");
+        values.put(COLUMN_EVENT_TIMESTAMP, cal.getTimeInMillis());
         values.put(COLUMN_EVENT_USER_ID, userId);
         values.put(COLUMN_EVENT_DELETED, 0);
         db.insert(TABLE_EVENTS, null, values);
+        values.clear();
 
+        cal.set(2026, Calendar.DECEMBER, 20, 18, 0, 0);
         values.put(COLUMN_EVENT_TITLE, "Birthday Party 4");
         values.put(COLUMN_EVENT_DESC, "Sarah's surprise birthday party at the downtown venue");
-        values.put(COLUMN_EVENT_DATE, "20/01/2025");
-        values.put(COLUMN_EVENT_TIME, "6:00 PM");
+        values.put(COLUMN_EVENT_TIMESTAMP, cal.getTimeInMillis());
         values.put(COLUMN_EVENT_USER_ID, userId);
         values.put(COLUMN_EVENT_DELETED, 0);
         db.insert(TABLE_EVENTS, null, values);
+        values.clear();
 
+        cal.set(2027, Calendar.MAY, 6, 18, 0, 0);
         values.put(COLUMN_EVENT_TITLE, "Birthday Party 5");
         values.put(COLUMN_EVENT_DESC, "Sarah's surprise birthday party at the downtown venue");
-        values.put(COLUMN_EVENT_DATE, "20/01/2025");
-        values.put(COLUMN_EVENT_TIME, "6:00 PM");
+        values.put(COLUMN_EVENT_TIMESTAMP, cal.getTimeInMillis());
         values.put(COLUMN_EVENT_USER_ID, userId);
         values.put(COLUMN_EVENT_DELETED, 0);
         db.insert(TABLE_EVENTS, null, values);
@@ -229,13 +233,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(TABLE_EVENTS, null, null);
     }
 
-    public boolean addEvent(String title, String description, String date, String time, int userId) {
+    public boolean addEvent(String title, String description, long timestamp, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_EVENT_TITLE, title);
         values.put(COLUMN_EVENT_DESC, description);
-        values.put(COLUMN_EVENT_DATE, date);
-        values.put(COLUMN_EVENT_TIME, time);
+        values.put(COLUMN_EVENT_TIMESTAMP, timestamp);
         values.put(COLUMN_EVENT_USER_ID, userId);
         values.put(COLUMN_EVENT_DELETED, 0);
         long result = db.insert(TABLE_EVENTS, null, values);
