@@ -8,8 +8,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.BreakIterator;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /*
  * EventAdapter.java
@@ -38,20 +40,20 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
 
-        // Split date into day and month for display
-        // Date is stored as DD/MM/YYYY
-        String[] dateParts = event.getDate().split("/");
-        if (dateParts.length == 3) {
-            holder.textEventDay.setText(dateParts[0]);
-            holder.textEventMonth.setText(getMonthName(Integer.parseInt(dateParts[1])));
-            holder.textEventYear.setText(dateParts[2]);
-        }
+        Date date = new Date(event.getTimestamp());
 
-        holder.textEventTime.setText(event.getTime());
+        SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.getDefault());
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
+        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
+
+        holder.textEventDay.setText(dayFormat.format(date));
+        holder.textEventMonth.setText(monthFormat.format(date).toUpperCase());
+        holder.textEventYear.setText(yearFormat.format(date));
+        holder.textEventTime.setText(timeFormat.format(date));
         holder.textEventTitle.setText(event.getTitle());
         holder.textEventDesc.setText(event.getDescription());
 
-        // Tap card to open event detail
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), EventDetailActivity.class);
             intent.putExtra("eventId", event.getId());
@@ -62,13 +64,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public int getItemCount() {
         return eventList.size();
-    }
-
-    private String getMonthName(int month) {
-        String[] months = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN",
-                "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
-        if (month >= 1 && month <= 12) return months[month - 1];
-        return "";
     }
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
