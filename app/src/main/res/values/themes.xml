@@ -10,5 +10,6 @@
         <item name="android:textColorSecondary">#666666</item>
         <item name="android:textColorHint">#444444</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="colorAccent">?attr/colorSecondary</item>
     </style>
 </resources>
