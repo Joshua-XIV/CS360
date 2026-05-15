@@ -21,6 +21,9 @@ public class EventDisplayActivity extends AppCompatActivity {
         databaseHelper = new DatabaseHelper(this);
         sessionManager = new SessionManager(this);
 
+        recycleViewEvents = findViewById(R.id.recyclerViewEvents);
+        addEvent = findViewById(R.id.fabAddEvent);
+
         recycleViewEvents.setLayoutManager(new GridLayoutManager(this, 2));
 
         addEvent.setOnClickListener(v -> {
