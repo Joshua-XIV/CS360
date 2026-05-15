@@ -46,6 +46,15 @@
                 tools:text="JAN"/>
 
             <TextView
+                android:id="@+id/textEventYear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textAllCaps="true"
+                tools:text="2027"/>
+
+            <TextView
                 android:id="@+id/textEventTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

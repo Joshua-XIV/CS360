@@ -7,12 +7,12 @@ package com.example.joshuaEventApp;
  * Each event belongs to a user and contains a title, description, date, and time.
  */
 public class Event {
-    private int id;
+    private final int id;
     private String title;
     private String description;
     private String date;
     private String time;
-    private int userId;
+    private final int userId;
 
     public Event(int id, String title,
                  String description, String date,

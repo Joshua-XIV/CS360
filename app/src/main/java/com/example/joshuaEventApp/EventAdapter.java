@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.text.BreakIterator;
 import java.util.List;
 
 /*
@@ -42,6 +44,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         if (dateParts.length == 3) {
             holder.textEventDay.setText(dateParts[0]);
             holder.textEventMonth.setText(getMonthName(Integer.parseInt(dateParts[1])));
+            holder.textEventYear.setText(Integer.parseInt(dateParts[2]));
         }
 
         holder.textEventTime.setText(event.getTime());
@@ -69,7 +72,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
-        TextView textEventDay, textEventMonth, textEventTime, textEventTitle, textEventDesc;
+        TextView textEventDay, textEventMonth, textEventTime,
+                 textEventTitle, textEventDesc, textEventYear;
 
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,6 +82,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             textEventTime = itemView.findViewById(R.id.textEventTime);
             textEventTitle = itemView.findViewById(R.id.textEventTitle);
             textEventDesc = itemView.findViewById(R.id.textEventDesc);
+            textEventYear = itemView.findViewById(R.id.textEventYear);
         }
     }
 }
