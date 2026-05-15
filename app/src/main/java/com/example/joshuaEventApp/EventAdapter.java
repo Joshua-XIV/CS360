@@ -44,7 +44,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         if (dateParts.length == 3) {
             holder.textEventDay.setText(dateParts[0]);
             holder.textEventMonth.setText(getMonthName(Integer.parseInt(dateParts[1])));
-            holder.textEventYear.setText(Integer.parseInt(dateParts[2]));
+            holder.textEventYear.setText(dateParts[2]);
         }
 
         holder.textEventTime.setText(event.getTime());
