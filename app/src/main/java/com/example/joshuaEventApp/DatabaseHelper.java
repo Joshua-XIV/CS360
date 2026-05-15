@@ -229,6 +229,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(TABLE_EVENTS, null, null);
     }
 
+    public boolean addEvent(String title, String description, String date, String time, int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_EVENT_TITLE, title);
+        values.put(COLUMN_EVENT_DESC, description);
+        values.put(COLUMN_EVENT_DATE, date);
+        values.put(COLUMN_EVENT_TIME, time);
+        values.put(COLUMN_EVENT_USER_ID, userId);
+        values.put(COLUMN_EVENT_DELETED, 0);
+        long result = db.insert(TABLE_EVENTS, null, values);
+        return result != -1;
+    }
+
     private String generateSalt() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
