@@ -11,17 +11,9 @@
         <item name="android:textColorHint">#444444</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="colorAccent">?attr/colorSecondary</item>
-        <item name="alertDialogTheme">@style/AlertDialogStyle</item>
     </style>
     <style name="Theme.MyApplication.WithActionBar" parent="Theme.MyApplication">
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">false</item>
-    </style>
-    <style name="AlertDialogStyle" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="buttonBarPositiveButtonStyle">@style/DialogButtonStyle</item>
-        <item name="buttonBarNegativeButtonStyle">@style/DialogButtonStyle</item>
-    </style>
-    <style name="DialogButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">?attr/colorSecondary</item>
     </style>
 </resources>
