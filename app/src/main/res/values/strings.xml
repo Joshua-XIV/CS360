@@ -13,4 +13,6 @@
     <string name="back_button">Back to Login</string>
     <string name="add_event">Add Event</string>
     <string name="delete_event">Delete event</string>
+    <string name="add_hint">Add one by clicking the + on the bottom right</string>
+    <string name="no_events">You have no events!</string>
 </resources>

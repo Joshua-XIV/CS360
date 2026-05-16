@@ -1,11 +1,15 @@
 package com.example.joshuaEventApp;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -60,6 +64,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         holder.textEventTitle.setText(event.getTitle());
         holder.textEventDesc.setText(event.getDescription());
 
+        updateProgressBar(holder.progressBar, event.getTimestamp(), holder.itemView.getContext());
+
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), EventDetailActivity.class);
             intent.putExtra("eventId", event.getId());
@@ -97,6 +103,25 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         return eventList.size();
     }
 
+    private void updateProgressBar(ProgressBar progressBar, long timestamp, Context context) {
+        long now = System.currentTimeMillis();
+        long diff = timestamp - now;
+        long oneDayMs = 24 * 60 * 60 * 1000L;
+        long twoDaysMs = 2 * oneDayMs;
+
+        progressBar.setProgress(100);
+
+        if (diff <= 0) {
+            progressBar.setProgressTintList(ColorStateList.valueOf(context.getColor(R.color.event_past)));
+        } else if (diff <= oneDayMs) {
+            progressBar.setProgressTintList(ColorStateList.valueOf(context.getColor(R.color.event_soon)));
+        } else if (diff <= twoDaysMs) {
+            progressBar.setProgressTintList(ColorStateList.valueOf(context.getColor(R.color.event_upcoming)));
+        } else {
+            progressBar.setProgressTintList(ColorStateList.valueOf(context.getColor(R.color.event_far)));
+        }
+    }
+
     public interface OnEventDeletedListener {
         void onEventDeleted();
     }
@@ -104,6 +129,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         TextView textEventDay, textEventMonth, textEventTime,
                  textEventTitle, textEventDesc, textEventYear;
+        ImageButton buttonDeleteEvent;
+        ProgressBar progressBar;
 
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -113,6 +140,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             textEventTitle = itemView.findViewById(R.id.textEventTitle);
             textEventDesc = itemView.findViewById(R.id.textEventDesc);
             textEventYear = itemView.findViewById(R.id.textEventYear);
+            buttonDeleteEvent = itemView.findViewById(R.id.buttonDeleteEvent);
+            progressBar = itemView.findViewById(R.id.eventProgressBar);
         }
     }
 }

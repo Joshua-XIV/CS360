@@ -15,112 +15,130 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp">
+        android:orientation="vertical">
 
-        <!-- Left: Date Block -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingEnd="12dp">
+            android:orientation="horizontal"
+            android:padding="12dp">
 
-            <TextView
-                android:id="@+id/textEventDay"
+            <!-- Left: Date Block -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="?android:attr/textColorPrimary"
-                tools:text="03"/>/>
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingEnd="12dp">
 
+                <TextView
+                    android:id="@+id/textEventDay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="?android:attr/textColorPrimary"
+                    tools:text="03"/>
 
-            <TextView
-                android:id="@+id/textEventMonth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textAllCaps="true"
-                tools:text="JAN"/>
+                <TextView
+                    android:id="@+id/textEventMonth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textAllCaps="true"
+                    tools:text="JAN"/>
 
-            <TextView
-                android:id="@+id/textEventYear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textAllCaps="true"
-                tools:text="2027"/>
+                <TextView
+                    android:id="@+id/textEventYear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textAllCaps="true"
+                    tools:text="2027"/>
 
-            <TextView
-                android:id="@+id/textEventTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="11sp"
-                android:textColor="?android:attr/textColorSecondary"
-                tools:text="7:00 PM"/>
+                <TextView
+                    android:id="@+id/textEventTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    tools:text="7:00 PM"/>
 
-        </LinearLayout>
-
-        <!-- Divider -->
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="?android:attr/textColorHint"
-            android:alpha="0.3"
-            android:layout_marginEnd="12dp"/>
-
-        <!-- Right: Title and Description -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/textEventTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="?android:attr/textColorPrimary"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:layout_marginBottom="4dp"
-                tools:text="Team Meeting"/>
+            </LinearLayout>
 
             <!-- Divider -->
             <View
-                android:layout_height="1dp"
-                android:layout_width="match_parent"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
                 android:background="?android:attr/textColorHint"
                 android:alpha="0.3"
                 android:layout_marginEnd="12dp"/>
 
-            <TextView
-                android:id="@+id/textEventDesc"
-                android:layout_width="match_parent"
+            <!-- Right: Title and Description -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="?android:attr/textColorSecondary"
-                android:maxLines="2"
-                android:ellipsize="end"
-                tools:text="Discuss Q3 goals and review project progress with the team"/>
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
 
-            <ImageButton
-                android:id="@+id/buttonDeleteEvent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:src="@android:drawable/ic_menu_delete"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:layout_marginTop="16dp"
-                android:contentDescription="@string/delete_event"
-                app:tint="?attr/colorError" />
+                <TextView
+                    android:id="@+id/textEventTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_marginBottom="4dp"
+                    tools:text="Team Meeting"/>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/textColorHint"
+                    android:alpha="0.3"
+                    android:layout_marginEnd="12dp"/>
+
+                <TextView
+                    android:id="@+id/textEventDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:maxLines="3"
+                    android:ellipsize="end"
+                    tools:text="Discuss Q3 goals and review project progress with the team"/>
+
+                <ImageButton
+                    android:id="@+id/buttonDeleteEvent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:src="@android:drawable/ic_menu_delete"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_margin="0dp"
+                    android:contentDescription="@string/delete_event"
+                    app:tint="?attr/colorError" />
+
+            </LinearLayout>
+
         </LinearLayout>
+
+        <!-- Progress Bar -->
+        <ProgressBar
+            android:id="@+id/eventProgressBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:max="100"
+            android:layout_marginTop="0dp"
+            tools:progress="100"/>
 
     </LinearLayout>
 

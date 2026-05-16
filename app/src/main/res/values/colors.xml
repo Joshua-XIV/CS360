@@ -8,4 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="dialog_button">#1A1A2E</color>
+    <color name="event_past">#D32F2F</color>
+    <color name="event_soon">#FFC107</color>
+    <color name="event_upcoming">#FF9800</color>
+    <color name="event_far">#4CAF50</color>
 </resources>
