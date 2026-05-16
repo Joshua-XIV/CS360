@@ -1,6 +1,8 @@
 package com.example.joshuaEventApp;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -67,9 +69,27 @@ public class EventDetailActivity extends AppCompatActivity {
         });
 
         buttonDeleteEvent.setOnClickListener(v -> {
-            databaseHelper.deleteEvent(event.getId());
-            finish();
+            new AlertDialog.Builder(this)
+                    .setTitle("Delete Event")
+                    .setMessage("Are you sure you want to delete this event?")
+                    .setPositiveButton("Delete", (dialog, which) -> {
+                        databaseHelper.deleteEvent(event.getId());
+                        finish();
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (event != null) {
+            event = databaseHelper.getEventById(event.getId());
+            if (event != null) {
+                populateEventDetails();
+            }
+        }
     }
 
     private void populateEventDetails() {
