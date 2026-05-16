@@ -201,6 +201,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
+    public boolean updateEvent(int eventId, String title, String description, long timestamp) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_EVENT_TITLE, title);
+        values.put(COLUMN_EVENT_DESC, description);
+        values.put(COLUMN_EVENT_TIMESTAMP, timestamp);
+        int rows = db.update(TABLE_EVENTS, values, COLUMN_EVENT_ID + "=?", new String[]{String.valueOf(eventId)});
+        return rows > 0;
+    }
+
     public boolean deleteEvent(int eventId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
