@@ -12,4 +12,8 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="colorAccent">?attr/colorSecondary</item>
     </style>
+    <style name="Theme.MyApplication.WithActionBar" parent="Theme.MyApplication">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
+    </style>
 </resources>
