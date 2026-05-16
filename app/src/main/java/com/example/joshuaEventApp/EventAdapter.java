@@ -1,9 +1,11 @@
 package com.example.joshuaEventApp;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,9 +25,13 @@ import java.util.Locale;
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
     private final List<Event> eventList;
+    private final DatabaseHelper databaseHelper;
+    private final OnEventDeletedListener deleteListener;
 
-    public EventAdapter(List<Event> eventList) {
+    public EventAdapter(List<Event> eventList, DatabaseHelper databaseHelper, OnEventDeletedListener deleteListener) {
         this.eventList = eventList;
+        this.databaseHelper = databaseHelper;
+        this.deleteListener = deleteListener;
     }
 
     @NonNull
@@ -59,11 +65,40 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             intent.putExtra("eventId", event.getId());
             v.getContext().startActivity(intent);
         });
+
+        ImageButton buttonDelete = holder.itemView.findViewById(R.id.buttonDeleteEvent);
+        buttonDelete.setOnClickListener(v -> {
+            new AlertDialog.Builder(v.getContext())
+                    .setTitle("Delete Event")
+                    .setMessage("Are you sure you want to delete this event?")
+                    .setPositiveButton("Delete", (dialog, which) -> {
+                        databaseHelper.deleteEvent(event.getId());
+                        deleteListener.onEventDeleted();
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .create();
+            AlertDialog d = new AlertDialog.Builder(v.getContext())
+                    .setTitle("Delete Event")
+                    .setMessage("Are you sure you want to delete this event?")
+                    .setPositiveButton("Delete", (dialog, which) -> {
+                        databaseHelper.deleteEvent(event.getId());
+                        deleteListener.onEventDeleted();
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .create();
+            d.show();
+            d.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(v.getContext().getColor(R.color.dialog_button));
+            d.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(v.getContext().getColor(R.color.dialog_button));
+        });
     }
 
     @Override
     public int getItemCount() {
         return eventList.size();
+    }
+
+    public interface OnEventDeletedListener {
+        void onEventDeleted();
     }
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {

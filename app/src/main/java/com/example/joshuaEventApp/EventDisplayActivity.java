@@ -53,7 +53,7 @@ public class EventDisplayActivity extends AppCompatActivity {
     private void loadEvents() {
         int userId = sessionManager.getUserId();
         List<Event> events = databaseHelper.getEventsByUser(userId);
-        EventAdapter adapter = new EventAdapter(events);
+        EventAdapter adapter = new EventAdapter(events, databaseHelper, this::loadEvents);
         recycleViewEvents.setAdapter(adapter);
 
         if (events.isEmpty()) {

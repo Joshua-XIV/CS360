@@ -12,4 +12,5 @@
     <string name="signup_confirm_button">Create Account</string>
     <string name="back_button">Back to Login</string>
     <string name="add_event">Add Event</string>
+    <string name="delete_event">Delete event</string>
 </resources>
