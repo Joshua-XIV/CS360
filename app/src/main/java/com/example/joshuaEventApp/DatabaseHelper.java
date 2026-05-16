@@ -159,6 +159,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return events;
     }
 
+    public Event getEventById(int eventId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_EVENTS, null,
+                COLUMN_EVENT_ID + "=?",
+                new String[]{String.valueOf(eventId)},
+                null, null, null);
+
+        if (cursor.moveToFirst()) {
+            Event event = new Event(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_EVENT_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EVENT_TITLE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EVENT_DESC)),
+                    cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_EVENT_TIMESTAMP)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_EVENT_USER_ID))
+            );
+            cursor.close();
+            return event;
+        }
+
+        cursor.close();
+        return null;
+    }
+
     /*
     DEBUG ONLY
     public void clearAllEvents() {
