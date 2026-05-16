@@ -20,8 +20,10 @@
         </activity>
 
         <activity android:name=".EventDisplayActivity" />
+        <activity android:name=".EventDetailActivity"
+            android:theme="@style/Theme.MyApplication.WithActionBar"/>
         <activity android:name=".AddEventActivity" />
-        <activity android:name=".EventDetailActivity" />
+
     </application>
 
 </manifest>
