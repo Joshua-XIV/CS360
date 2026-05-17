@@ -200,11 +200,18 @@ public class AddEventActivity extends AppCompatActivity {
         calendar.set(Calendar.MILLISECOND, 0);
         long timestamp = calendar.getTimeInMillis();
 
+        String phone = databaseHelper.getPhone(sessionManager.getUsername());
+
         if (isEditMode) {
             databaseHelper.updateEvent(editEventId, title, desc, timestamp);
+            SmsScheduler.cancelReminder(this, editEventId);
+            SmsScheduler.scheduleReminder(this, editEventId, title, timestamp, phone);
         } else {
             int userId = sessionManager.getUserId();
-            databaseHelper.addEvent(title, desc, timestamp, userId);
+            long newEventId = databaseHelper.addEvent(title, desc, timestamp, userId);
+            if (newEventId != -1) {
+                SmsScheduler.scheduleReminder(this, (int)newEventId, title, timestamp, phone);
+            }
         }
 
         finish();
