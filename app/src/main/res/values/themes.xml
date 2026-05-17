@@ -1,16 +1,18 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.MyApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">#F5F5F5</item>
-        <item name="colorPrimaryVariant">#FFFFFF</item>
-        <item name="colorOnPrimary">#1A1A2E</item>
-        <item name="colorSecondary">#1A1A2E</item>
-        <item name="colorOnSecondary">#FFFFFF</item>
-        <item name="colorError">#D32F2F</item>
-        <item name="android:textColorPrimary">#1A1A2E</item>
+    <style name="Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/light_background</item>
+        <item name="colorPrimaryVariant">@color/light_surface</item>
+        <item name="colorOnPrimary">@color/navy</item>
+        <item name="colorSecondary">@color/navy</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorError">@color/error_red</item>
+        <item name="android:textColorPrimary">@color/text_color_primary</item>
         <item name="android:textColorSecondary">#666666</item>
         <item name="android:textColorHint">#444444</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="colorAccent">?attr/colorSecondary</item>
+        <item name="colorAccent">@color/navy</item>
+        <item name="colorSurface">@color/light_background</item>
+        <item name="colorOnSurface">@color/navy</item>
     </style>
     <style name="Theme.MyApplication.WithActionBar" parent="Theme.MyApplication">
         <item name="windowActionBar">true</item>

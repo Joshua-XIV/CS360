@@ -1,17 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.MyApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">#000000</item>
-        <item name="colorPrimaryVariant">#16213E</item>
-        <item name="colorOnPrimary">#F5F5F5</item>
-        <item name="colorSecondary">#F5F5F5</item>
-        <item name="colorOnSecondary">#000000</item>
-        <item name="colorError">#D32F2F</item>
-        <item name="android:textColorPrimary">#F5F5F5</item>
+    <style name="Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/dark_background</item>
+        <item name="colorPrimaryVariant">@color/dark_surface</item>
+        <item name="colorOnPrimary">@color/dark_text</item>
+        <item name="colorSecondary">@color/dark_text</item>
+        <item name="colorOnSecondary">@color/dark_background</item>
+        <item name="colorError">@color/error_red</item>
+        <item name="android:textColorPrimary">@color/text_color_primary</item>
         <item name="android:textColorSecondary">#AAAAAA</item>
         <item name="android:textColorHint">#BBBBBB</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:statusBarColor">#000000</item>
-        <item name="colorAccent">?attr/colorSecondary</item>
+        <item name="android:statusBarColor">@color/dark_background</item>
+        <item name="colorAccent">@color/dark_text</item>
+        <item name="colorSurface">@color/dark_background</item>
+        <item name="colorOnSurface">@color/dark_text</item>
     </style>
     <style name="Theme.MyApplication.WithActionBar" parent="Theme.MyApplication">
         <item name="windowActionBar">true</item>
