@@ -106,7 +106,7 @@ public class EventDisplayActivity extends AppCompatActivity {
 
         AlertDialog d = new AlertDialog.Builder(this)
                 .setTitle("SMS Notifications")
-                .setMessage("Event Tracker would like to send you SMS reminders 24 hours before your events. Would you like to enable this?")
+                .setMessage("Event Tracker would like to send you SMS reminders before your events. Would you like to enable this?")
                 .setPositiveButton("Allow", (dialog, which) -> {
                     ActivityCompat.requestPermissions(this,
                             new String[]{Manifest.permission.SEND_SMS},
