@@ -1,14 +1,18 @@
 package com.example.joshuaEventApp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
@@ -18,6 +22,9 @@ public class EventDisplayActivity extends AppCompatActivity {
     private DatabaseHelper databaseHelper;
     private SessionManager sessionManager;
     private LinearLayout layoutEmptyState;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private ImageButton buttonMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,24 @@ public class EventDisplayActivity extends AppCompatActivity {
         addEvent.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddEventActivity.class);
             startActivity(intent);
+        });
+
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navigationView);
+        buttonMenu = findViewById(R.id.buttonMenu);
+
+        buttonMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.action_logout) {
+                sessionManager.logout();
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
         });
     }
 
