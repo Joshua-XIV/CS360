@@ -47,8 +47,8 @@
 
                 <!-- Placeholder to balance the layout -->
                 <View
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"/>
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"/>
 
             </LinearLayout>
 
@@ -112,6 +112,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:background="?attr/colorSurface"
+        app:itemTextColor="?attr/colorOnSurface"
+        app:itemIconTint="?attr/colorOnSurface"
         app:menu="@menu/menu_main"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
