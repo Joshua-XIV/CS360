@@ -6,6 +6,7 @@ public class SessionManager {
     private static final String PREFERENCE_NAME = "EventTrackerSession";
     private static final String KEY_USER_ID = "userId";
     private static final String KEY_USERNAME = "username";
+    private static final String KEY_SMS_ASKED = "smsAsked";
     private static final int NO_USER = -1;
 
     private final SharedPreferences prefs;
@@ -37,5 +38,14 @@ public class SessionManager {
 
     public String getUsername() {
         return prefs.getString(KEY_USERNAME, null);
+    }
+
+    public boolean hasSmsBeenAsked() {
+        return prefs.getBoolean(KEY_SMS_ASKED, false);
+    }
+
+    public void setSmsAsked() {
+        editor.putBoolean(KEY_SMS_ASKED, true);
+        editor.apply();
     }
 }
