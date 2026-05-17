@@ -69,18 +69,19 @@ public class EventDetailActivity extends AppCompatActivity {
         });
 
         buttonDeleteEvent.setOnClickListener(v -> {
-            AlertDialog dialog = new AlertDialog.Builder(this)
+            AlertDialog d = new AlertDialog.Builder(this)
                     .setTitle("Delete Event")
                     .setMessage("Are you sure you want to delete this event?")
-                    .setPositiveButton("Delete", (d, which) -> {
+                    .setPositiveButton("Delete", (dialog, which) -> {
+                        SmsScheduler.cancelReminder(this, event.getId());
                         databaseHelper.deleteEvent(event.getId());
                         finish();
                     })
                     .setNegativeButton("Cancel", null)
                     .create();
-            dialog.show();
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.dialog_button));
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.dialog_button));
+            d.show();
+            d.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.dialog_button));
+            d.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.error_red));
         });
     }
 

@@ -74,19 +74,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         ImageButton buttonDelete = holder.itemView.findViewById(R.id.buttonDeleteEvent);
         buttonDelete.setOnClickListener(v -> {
-            new AlertDialog.Builder(v.getContext())
-                    .setTitle("Delete Event")
-                    .setMessage("Are you sure you want to delete this event?")
-                    .setPositiveButton("Delete", (dialog, which) -> {
-                        databaseHelper.deleteEvent(event.getId());
-                        deleteListener.onEventDeleted();
-                    })
-                    .setNegativeButton("Cancel", null)
-                    .create();
             AlertDialog d = new AlertDialog.Builder(v.getContext())
                     .setTitle("Delete Event")
                     .setMessage("Are you sure you want to delete this event?")
                     .setPositiveButton("Delete", (dialog, which) -> {
+                        SmsScheduler.cancelReminder(v.getContext(), event.getId());
                         databaseHelper.deleteEvent(event.getId());
                         deleteListener.onEventDeleted();
                     })
@@ -94,7 +86,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                     .create();
             d.show();
             d.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(v.getContext().getColor(R.color.dialog_button));
-            d.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(v.getContext().getColor(R.color.dialog_button));
+            d.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(v.getContext().getColor(R.color.error_red));
         });
     }
 
