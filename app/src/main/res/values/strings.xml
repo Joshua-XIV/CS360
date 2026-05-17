@@ -15,4 +15,6 @@
     <string name="delete_event">Delete event</string>
     <string name="add_hint">Add one by clicking the + on the bottom right</string>
     <string name="no_events">You have no events!</string>
+    <string name="menu">Menu</string>
+    <string name="logout">Logout</string>
 </resources>
