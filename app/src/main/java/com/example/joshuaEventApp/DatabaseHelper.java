@@ -18,13 +18,14 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "eventtracker.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // Users table
     public static final String TABLE_USERS = "users";
     public static final String COLUMN_USER_ID = "id";
     public static final String COLUMN_USERNAME = "username";
     public static final String COLUMN_EMAIL = "email";
+    public static final String COLUMN_PHONE = "phone";
     public static final String COLUMN_HASHED_PASSWORD = "password";
     public static final String COLUMN_SALT = "salt";
 
@@ -48,7 +49,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_USERNAME + " TEXT UNIQUE, " +
                 COLUMN_EMAIL + " TEXT UNIQUE, " +
                 COLUMN_HASHED_PASSWORD + " TEXT, " +
-                COLUMN_SALT + " TEXT)";
+                COLUMN_SALT + " TEXT, " +
+                COLUMN_PHONE + " TEXT)";
 
         String createEvents = "CREATE TABLE " + TABLE_EVENTS + " (" +
                 COLUMN_EVENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -118,6 +120,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_SALT, newSalt);
         int rows = db.update(TABLE_USERS, values, COLUMN_USERNAME + "=?", new String[]{username});
         return rows > 0;
+    }
+
+    public boolean updatePhone(String username, String phone) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PHONE, phone);
+        int rows = db.update(TABLE_USERS, values, COLUMN_USERNAME + "=?", new String[]{username});
+        return rows > 0;
+    }
+
+    public String getPhone(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_PHONE},
+                COLUMN_USERNAME + "=?", new String[]{username}, null, null, null);
+        if (cursor.moveToFirst()) {
+            String phone = cursor.getString(0);
+            cursor.close();
+            return phone;
+        }
+        cursor.close();
+        return null;
     }
 
     public int getUserId(String username) {
