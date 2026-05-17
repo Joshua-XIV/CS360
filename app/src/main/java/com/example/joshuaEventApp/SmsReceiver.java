@@ -32,7 +32,7 @@ public class SmsReceiver extends BroadcastReceiver {
         String message = "Reminder: \"" + eventTitle + "\" is tomorrow at " + eventTime;
 
         try {
-            SmsManager smsManager = SmsManager.getDefault();
+            SmsManager smsManager = context.getSystemService(SmsManager.class);
             smsManager.sendTextMessage(phone, null, message, null, null);
         } catch (Exception e) {
             e.printStackTrace();
