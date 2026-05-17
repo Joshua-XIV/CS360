@@ -24,12 +24,9 @@ public class SmsReceiver extends BroadcastReceiver {
         }
 
         String phone = intent.getStringExtra("phone");
-        String eventTitle = intent.getStringExtra("eventTitle");
-        String eventTime = intent.getStringExtra("eventTime");
+        String message = intent.getStringExtra("message");
 
-        if (phone == null || phone.isEmpty()) return;
-
-        String message = "Reminder: \"" + eventTitle + "\" is tomorrow at " + eventTime;
+        if (phone == null || phone.isEmpty() || message == null) return;
 
         try {
             SmsManager smsManager = context.getSystemService(SmsManager.class);
