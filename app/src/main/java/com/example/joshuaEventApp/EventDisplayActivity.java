@@ -1,13 +1,19 @@
 package com.example.joshuaEventApp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -17,6 +23,7 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.List;
 
 public class EventDisplayActivity extends AppCompatActivity {
+    private static final int SMS_PERMISSION_CODE = 100;
     private RecyclerView recycleViewEvents;
     private FloatingActionButton addEvent;
     private DatabaseHelper databaseHelper;
@@ -67,6 +74,8 @@ public class EventDisplayActivity extends AppCompatActivity {
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
+
+        checkSmsPermission();
     }
 
     @Override
@@ -87,6 +96,65 @@ public class EventDisplayActivity extends AppCompatActivity {
         } else {
             layoutEmptyState.setVisibility(View.GONE);
             recycleViewEvents.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void checkSmsPermission() {
+        if (sessionManager.hasSmsBeenAsked()) return;
+
+        sessionManager.setSmsAsked();
+
+        AlertDialog d = new AlertDialog.Builder(this)
+                .setTitle("SMS Notifications")
+                .setMessage("Event Tracker would like to send you SMS reminders 24 hours before your events. Would you like to enable this?")
+                .setPositiveButton("Allow", (dialog, which) -> {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.SEND_SMS},
+                            SMS_PERMISSION_CODE);
+                })
+                .setNegativeButton("No Thanks", null)
+                .create();
+        d.show();
+        d.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.dialog_button));
+        d.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.error_red));
+    }
+
+    private void checkPhoneNumber() {
+        String phone = databaseHelper.getPhone(sessionManager.getUsername());
+        if (phone == null || phone.isEmpty()) {
+            showPhoneNumberDialog();
+        }
+    }
+
+    private void showPhoneNumberDialog() {
+        EditText editTextPhone = new EditText(this);
+        editTextPhone.setHint("Enter your phone number");
+        editTextPhone.setInputType(android.text.InputType.TYPE_CLASS_PHONE);
+
+        AlertDialog d = new AlertDialog.Builder(this)
+                .setTitle("Phone Number")
+                .setMessage("Enter your phone number to receive SMS reminders")
+                .setView(editTextPhone)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    String phone = editTextPhone.getText().toString().trim();
+                    if (!phone.isEmpty()) {
+                        databaseHelper.updatePhone(sessionManager.getUsername(), phone);
+                    }
+                })
+                .setNegativeButton("Skip", null)
+                .create();
+        d.show();
+        d.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.dialog_button));
+        d.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.error_red));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == SMS_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showPhoneNumberDialog();
+            }
         }
     }
 }
