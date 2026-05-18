@@ -3,6 +3,7 @@ package com.example.joshuaEventApp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,12 +13,10 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -26,6 +25,7 @@ import java.util.List;
 
 public class EventDisplayActivity extends AppCompatActivity {
     private static final int SMS_PERMISSION_CODE = 100;
+    private static final int NOTIFICATION_PERMISSION_CODE = 101;
     private RecyclerView recycleViewEvents;
     private FloatingActionButton addEvent;
     private DatabaseHelper databaseHelper;
@@ -49,9 +49,6 @@ public class EventDisplayActivity extends AppCompatActivity {
         recycleViewEvents.setLayoutManager(new GridLayoutManager(this, 1));
         layoutEmptyState = findViewById(R.id.layoutEmptyState);
 
-        // load some test events
-        // databaseHelper.clearAllEvents();
-        // databaseHelper.insertTestEvents(sessionManager.getUserId());
         loadEvents();
 
         addEvent.setOnClickListener(v -> {
@@ -81,6 +78,7 @@ public class EventDisplayActivity extends AppCompatActivity {
 
         navigationView.getMenu().findItem(R.id.menu_username).setTitle(sessionManager.getUsername());
         checkSmsPermission();
+        checkNotificationPermission();
     }
 
     @Override
@@ -124,6 +122,17 @@ public class EventDisplayActivity extends AppCompatActivity {
         d.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.error_red));
     }
 
+    private void checkNotificationPermission() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        NOTIFICATION_PERMISSION_CODE);
+            }
+        }
+    }
+
     private void checkPhoneNumber() {
         String phone = databaseHelper.getPhone(sessionManager.getUsername());
         if (phone == null || phone.isEmpty()) {
@@ -160,6 +169,8 @@ public class EventDisplayActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 showPhoneNumberDialog();
             }
+        } else if (requestCode == NOTIFICATION_PERMISSION_CODE) {
+            // app should just continue regardless
         }
     }
 }
