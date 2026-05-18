@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -50,6 +51,8 @@
                 android:layout_height="wrap_content"
                 android:text="Enable Push Notifications"
                 android:textColor="?android:attr/textColorPrimary"
+                android:thumbTint="?attr/colorSecondary"
+                app:thumbTint="?attr/colorSecondary"
                 android:layout_marginBottom="12dp" />
 
             <androidx.appcompat.widget.SwitchCompat
@@ -58,6 +61,8 @@
                 android:layout_height="wrap_content"
                 android:text="Enable SMS Reminders"
                 android:textColor="?android:attr/textColorPrimary"
+                android:thumbTint="?attr/colorSecondary"
+                app:thumbTint="?attr/colorSecondary"
                 android:layout_marginBottom="20dp" />
 
             <Button
@@ -188,6 +193,8 @@
                 android:layout_height="wrap_content"
                 android:text="Dark Mode"
                 android:textColor="?android:attr/textColorPrimary"
+                android:thumbTint="?attr/colorSecondary"
+                app:thumbTint="?attr/colorSecondary"
                 android:layout_marginBottom="24dp"/>
 
         </LinearLayout>
