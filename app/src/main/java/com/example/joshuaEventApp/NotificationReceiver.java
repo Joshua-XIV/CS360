@@ -14,6 +14,9 @@ import androidx.core.app.NotificationCompat;
  *
  * BroadcastReceiver that fires when an AlarmManager alarm goes off.
  * Posts a local push notification reminding the user of an upcoming event.
+ *
+ * Creates and displays a local push notification reminding the
+ * user about an upcoming event.
  */
 public class NotificationReceiver extends BroadcastReceiver {
 
@@ -22,6 +25,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        // Retrieves notification message and ID
         String message = intent.getStringExtra("message");
         int notificationId = intent.getIntExtra("notificationId", 0);
 
@@ -32,14 +36,18 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         if (notificationManager == null) return;
 
-        // Create notification channel
-        NotificationChannel channel = new NotificationChannel(
-                CHANNEL_ID,
-                CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_HIGH
-        );
-        channel.setDescription("Reminders for upcoming events");
-        notificationManager.createNotificationChannel(channel);
+        // Creates the notification channel required
+        // for Android 8.0 (API 26) and higher
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel =
+                    new NotificationChannel(
+                            CHANNEL_ID,
+                            CHANNEL_NAME,
+                            NotificationManager.IMPORTANCE_HIGH
+                    );
+            channel.setDescription("Reminders for upcoming events");
+            notificationManager.createNotificationChannel(channel);
+        }
 
         // Tap notification to open app
         Intent openIntent = new Intent(context, EventDisplayActivity.class);
@@ -51,6 +59,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
+        // Builds notification UI
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentTitle("Event Reminder")
@@ -60,6 +69,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
+        // Displays notificaiton
         notificationManager.notify(notificationId, builder.build());
     }
 }
