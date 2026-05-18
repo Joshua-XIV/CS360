@@ -29,9 +29,6 @@ public class SmsScheduler {
     };
 
     public static void scheduleReminder(Context context, int eventId, String eventTitle, long eventTimestamp, String phone) {
-        if (phone == null || phone.isEmpty()) return;
-
-        android.util.Log.d("SmsScheduler", "scheduleReminder called for: " + eventTitle + " phone: " + phone);
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
         String eventTime = timeFormat.format(new Date(eventTimestamp));
 
@@ -44,38 +41,71 @@ public class SmsScheduler {
 
             String message = "Reminder: \"" + eventTitle + "\" is " + REMINDER_LABELS[i] + " at " + eventTime;
 
-            Intent intent = new Intent(context, SmsReceiver.class);
-            intent.putExtra("phone", phone);
-            intent.putExtra("message", message);
+            // Schedule SMS
+            if (phone != null && !phone.isEmpty()) {
+                Intent smsIntent = new Intent(context, SmsReceiver.class);
+                smsIntent.putExtra("phone", phone);
+                smsIntent.putExtra("message", message);
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                PendingIntent smsPendingIntent = PendingIntent.getBroadcast(
+                        context,
+                        eventId * 10 + i,
+                        smsIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                );
+
+                try {
+                    android.util.Log.d("SmsScheduler", "Setting SMS alarm " + i + " diff ms: " + (reminderTime - System.currentTimeMillis()));
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderTime, smsPendingIntent);
+                } catch (SecurityException e) {
+                    android.util.Log.e("SmsScheduler", "SecurityException: " + e.getMessage());
+                }
+            }
+
+            // Schedule push notification
+            Intent notifIntent = new Intent(context, NotificationReceiver.class);
+            notifIntent.putExtra("message", message);
+            notifIntent.putExtra("notificationId", eventId * 10 + i);
+
+            PendingIntent notifPendingIntent = PendingIntent.getBroadcast(
                     context,
-                    eventId * 10 + i,
-                    intent,
+                    eventId * 100 + i,
+                    notifIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
 
             try {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent);
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderTime, notifPendingIntent);
             } catch (SecurityException e) {
-                android.util.Log.e("SmsScheduler", "Error: reminder failed to set");
+                android.util.Log.e("SmsScheduler", "SecurityException: " + e.getMessage());
             }
         }
     }
 
     public static void cancelReminder(Context context, int eventId) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager == null) return;
+
         for (int i = 0; i < REMINDER_OFFSETS.length; i++) {
-            Intent intent = new Intent(context, SmsReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+            // Cancel SMS alarms
+            Intent smsIntent = new Intent(context, SmsReceiver.class);
+            PendingIntent smsPendingIntent = PendingIntent.getBroadcast(
                     context,
                     eventId * 10 + i,
-                    intent,
+                    smsIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
-            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            if (alarmManager != null) {
-                alarmManager.cancel(pendingIntent);
-            }
+            alarmManager.cancel(smsPendingIntent);
+
+            // Cancel notification alarms
+            Intent notifIntent = new Intent(context, NotificationReceiver.class);
+            PendingIntent notifPendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    eventId * 100 + i,
+                    notifIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+            alarmManager.cancel(notifPendingIntent);
         }
     }
 }
