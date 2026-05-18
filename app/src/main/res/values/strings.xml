@@ -19,4 +19,23 @@
     <string name="logout">Logout</string>
     <string name="settings">Settings</string>
     <string name="menu_username_placeholder">Guest</string>
+    <string name="reminder_settings">Reminder Settings</string>
+    <string name="enable_push_notifications">Enable Push Notifications</string>
+    <string name="enable_sms_reminders">Enable SMS Reminders</string>
+    <string name="configure_reminder_times">Configure Reminder Times</string>
+    <string name="open_phone_settings">Open Phone Settings</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="appearance">Appearance</string>
+    <string name="update_password">Update Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="new_password">New Password</string>
+    <string name="current_password">Current Password</string>
+    <string name="change_password">Change Password</string>
+    <string name="save_phone_number">Save Phone Number</string>
+    <string name="enter_phone_number">Enter phone number</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="current_phone_number_not_set">Current phone number: Not set</string>
+    <string name="account">Account</string>
+    <string name="reminder">Reminder</string>
+    <string name="info_settings">Manage reminders, account info, and appearance</string>
 </resources>
