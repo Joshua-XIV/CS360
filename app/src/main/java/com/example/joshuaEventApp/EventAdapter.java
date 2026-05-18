@@ -22,9 +22,11 @@ import java.util.Locale;
 /*
  * EventAdapter.java
  *
- * RecyclerView adapter for displaying a list of Event objects in a grid.
- * Each card displays the event day, month, time, title, and description.
- * Tapping a card navigates to EventDetailActivity.
+ * RecyclerView adapter for displaying a list of Event objects as cards.
+ * Each card shows the event date, time, title, and description along with
+ * a color coded progress bar based on how soon the event is.
+ * Tapping a card opens EventDetailActivity. A delete button on each card
+ * allows quick deletion.
  */
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
@@ -66,12 +68,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         updateProgressBar(holder.progressBar, event.getTimestamp(), holder.itemView.getContext());
 
+        // When tapping on a card, it opens the full event details
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), EventDetailActivity.class);
             intent.putExtra("eventId", event.getId());
             v.getContext().startActivity(intent);
         });
 
+        // A delete button with confirmation dialog
         ImageButton buttonDelete = holder.itemView.findViewById(R.id.buttonDeleteEvent);
         buttonDelete.setOnClickListener(v -> {
             AlertDialog d = new AlertDialog.Builder(v.getContext())
@@ -95,6 +99,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         return eventList.size();
     }
 
+    // Updates the progress bar color based on how soon the event is
+    // Green is more than 2 days away, Orange is between 1 and 2 days
+    // Yellow is less than 1 day, and Red is when the event has passed/
     private void updateProgressBar(ProgressBar progressBar, long timestamp, Context context) {
         long now = System.currentTimeMillis();
         long diff = timestamp - now;
