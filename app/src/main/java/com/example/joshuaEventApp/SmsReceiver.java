@@ -18,16 +18,19 @@ public class SmsReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        // Checks if SMS permissions are granted
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
+        // Gets phone and message content
         String phone = intent.getStringExtra("phone");
         String message = intent.getStringExtra("message");
 
         if (phone == null || phone.isEmpty() || message == null) return;
 
+        // Attempts to send reminder
         try {
             SmsManager smsManager = context.getSystemService(SmsManager.class);
             smsManager.sendTextMessage(phone, null, message, null, null);
