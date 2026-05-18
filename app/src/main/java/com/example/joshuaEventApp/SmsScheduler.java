@@ -11,11 +11,18 @@ import java.util.Locale;
 /*
  * SmsScheduler.java
  *
- * Schedules SMS reminders via AlarmManager to fire 24 hours, 3 hours,
- * and 1 hour before a given event timestamp.
+ * Utility class responsible for scheduling and cancelling
+ * event reminder alarms using AlarmManager.
+ *
+ * Creates both SMS reminders and local push notifications
+ * at multiple intervals before an event:
+ * - 24 hours before
+ * - 3 hours before
+ * - 1 hour before
  */
 public class SmsScheduler {
 
+    // Reminders in milliseconds
     private static final long[] REMINDER_OFFSETS = {
             24 * 60 * 60 * 1000L,  // 24 hours
             3 * 60 * 60 * 1000L,   // 3 hours
@@ -28,6 +35,7 @@ public class SmsScheduler {
             "in 1 hour"
     };
 
+    // Schedules all SMS and notification reminders for a specific event
     public static void scheduleReminder(Context context, int eventId, String eventTitle, long eventTimestamp, String phone) {
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
         String eventTime = timeFormat.format(new Date(eventTimestamp));
@@ -35,6 +43,7 @@ public class SmsScheduler {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager == null) return;
 
+        // Creates alarms for each reminder interval
         for (int i = 0; i < REMINDER_OFFSETS.length; i++) {
             long reminderTime = eventTimestamp - REMINDER_OFFSETS[i];
             if (reminderTime <= System.currentTimeMillis()) continue;
@@ -82,6 +91,7 @@ public class SmsScheduler {
         }
     }
 
+    // Cancels all scheduled SMS and notification reminders for a specific event
     public static void cancelReminder(Context context, int eventId) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager == null) return;
