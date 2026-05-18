@@ -12,10 +12,12 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -75,6 +77,7 @@ public class EventDisplayActivity extends AppCompatActivity {
             return true;
         });
 
+        navigationView.getMenu().findItem(R.id.menu_username).setTitle(sessionManager.getUsername());
         checkSmsPermission();
     }
 

@@ -2,6 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_username"
+        android:title="@string/menu_username_placeholder"
+        android:enabled="false"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/settings"
+        android:title="@string/settings"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/action_logout"
         android:title="@string/logout"
         app:showAsAction="never"/>
