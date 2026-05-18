@@ -72,6 +72,8 @@ public class EventDisplayActivity extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
+            } else if (item.getItemId() == R.id.settings) {
+                // TODO: open settings screen
             }
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
