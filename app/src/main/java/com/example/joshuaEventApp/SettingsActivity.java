@@ -98,12 +98,6 @@ public class SettingsActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Settings");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
-        if (toolbar.getNavigationIcon() != null) {
-            toolbar.getNavigationIcon().setTint(
-                    getColor(android.R.color.black)
-            );
-        }
     }
 
     private void bindViews() {
