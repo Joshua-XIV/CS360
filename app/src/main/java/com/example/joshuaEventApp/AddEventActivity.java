@@ -21,9 +21,13 @@ import java.util.Locale;
  * AddEventActivity.java
  *
  * Handles both creating a new event and editing an existing one.
- * When launched with an eventId extra it enters edit mode, pre-populating
- * all fields with the existing event data. On save, inserts or updates
- * the event in the database as a Unix timestamp.
+ * When launched with an eventId, enters edit mode and pre-populates
+ * all fields with the existing event data.
+ *
+ * On save, the selected date and time are combined into a Unix timestamp
+ * and stored in the database. SMS and push notification reminders are
+ * scheduled via SmsScheduler for 24 hours, 3 hours, and 1 hour before
+ * the event. If in edit mode, existing reminders should be cancelled and rescheduled.
  */
 public class AddEventActivity extends AppCompatActivity {
     private EditText editTextEventTitle, editTextEventDesc;
@@ -76,6 +80,7 @@ public class AddEventActivity extends AppCompatActivity {
         buttonCancelEvent.setOnClickListener(v -> finish());
     }
 
+    // Pre-populates fields with event data if we're in edit mode
     private void populateExistingEvent() {
         Event event = databaseHelper.getEventById(editEventId);
         if (event == null) {
@@ -109,6 +114,7 @@ public class AddEventActivity extends AppCompatActivity {
         buttonPickTime.setText(timeFormat.format(date));
     }
 
+    // Uses Android's data picker
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
 
@@ -125,6 +131,7 @@ public class AddEventActivity extends AppCompatActivity {
         dialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.dialog_button));
     }
 
+    // Shows a custom NumberPicker for selecting the time, hours, minutes, and AM or PM
     private void showTimePicker() {
         Calendar calendar = Calendar.getInstance();
 
@@ -169,9 +176,11 @@ public class AddEventActivity extends AppCompatActivity {
 
         timeDialog.show();
         timeDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.dialog_button));
-        timeDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.dialog_button));
+        timeDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.error_red));
     }
 
+    // Validates inputs, also converts date and time to a Unix timestamp,
+    // saves the event, and then schedules SMS and push notification reminders
     private void saveEvent() {
         String title = editTextEventTitle.getText().toString().trim();
         String desc = editTextEventDesc.getText().toString().trim();
@@ -191,6 +200,7 @@ public class AddEventActivity extends AppCompatActivity {
             return;
         }
 
+        // Convert 12 hour to 24 hour format for timestamps
         int hour24 = selectedHour;
         if (selectedAmPm == 1 && selectedHour != 12) hour24 = selectedHour + 12;
         if (selectedAmPm == 0 && selectedHour == 12) hour24 = 0;
@@ -202,6 +212,8 @@ public class AddEventActivity extends AppCompatActivity {
 
         String phone = databaseHelper.getPhone(sessionManager.getUsername());
 
+        // Cancels and reschedules reminders if in edit mode, otherwise
+        // schedules new reminders
         if (isEditMode) {
             databaseHelper.updateEvent(editEventId, title, desc, timestamp);
             SmsScheduler.cancelReminder(this, editEventId);
