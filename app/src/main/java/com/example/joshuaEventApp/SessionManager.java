@@ -2,6 +2,14 @@ package com.example.joshuaEventApp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+/*
+ * SessionManager.java
+ *
+ * Stores login state, user information, and simple app preferences
+ * such as whether the SMS permission dialog has already been shown.
+ *
+ */
 public class SessionManager {
     private static final String PREFERENCE_NAME = "EventTrackerSession";
     private static final String KEY_USER_ID = "userId";
@@ -17,12 +25,14 @@ public class SessionManager {
         editor = prefs.edit();
     }
 
+    // Saves the user's information
     public void login(int userId, String username) {
         editor.putInt(KEY_USER_ID, userId);
         editor.putString(KEY_USERNAME, username);
         editor.apply();
     }
 
+    // Clears all saved sessions data
     public void logout() {
         editor.clear();
         editor.apply();
