@@ -17,5 +17,6 @@
     <style name="Theme.MyApplication.WithActionBar" parent="Theme.MyApplication">
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">false</item>
+        <item name="colorControlNormal">?android:attr/textColorPrimary</item>
     </style>
 </resources>

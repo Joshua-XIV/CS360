@@ -62,18 +62,20 @@
 
             <Button
                 android:id="@+id/btnReminderTimes"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:text="Configure Reminder Times"
+                android:backgroundTint="?attr/colorSecondary"
+                android:textColor="?attr/colorOnSecondary"
                 android:layout_marginBottom="12dp"/>
 
             <Button
                 android:id="@+id/btnOpenPhoneSettings"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:text="Open Phone Settings"
+                android:backgroundTint="?attr/colorSecondary"
+                android:textColor="?attr/colorOnSecondary"
                 android:layout_marginBottom="32dp"/>
 
             <!-- ACCOUNT -->
