@@ -31,7 +31,6 @@ public class SmsReceiver extends BroadcastReceiver {
         try {
             SmsManager smsManager = context.getSystemService(SmsManager.class);
             smsManager.sendTextMessage(phone, null, message, null, null);
-            android.util.Log.d("SmsReceiver", "LOGGING Phone: " + phone + " Message: " + message);
         } catch (Exception e) {
             e.printStackTrace();
         }

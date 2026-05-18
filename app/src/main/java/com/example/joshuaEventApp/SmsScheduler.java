@@ -31,8 +31,12 @@ public class SmsScheduler {
     public static void scheduleReminder(Context context, int eventId, String eventTitle, long eventTimestamp, String phone) {
         if (phone == null || phone.isEmpty()) return;
 
+        android.util.Log.d("SmsScheduler", "scheduleReminder called for: " + eventTitle + " phone: " + phone);
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
         String eventTime = timeFormat.format(new Date(eventTimestamp));
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager == null) return;
 
         for (int i = 0; i < REMINDER_OFFSETS.length; i++) {
             long reminderTime = eventTimestamp - REMINDER_OFFSETS[i];
@@ -51,19 +55,10 @@ public class SmsScheduler {
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
 
-            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            if (alarmManager != null) {
-                try {
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                        if (alarmManager.canScheduleExactAlarms()) {
-                            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent);
-                        }
-                    } else {
-                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent);
-                    }
-                } catch (SecurityException e) {
-                    e.printStackTrace();
-                }
+            try {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent);
+            } catch (SecurityException e) {
+                android.util.Log.e("SmsScheduler", "Error: reminder failed to set");
             }
         }
     }
