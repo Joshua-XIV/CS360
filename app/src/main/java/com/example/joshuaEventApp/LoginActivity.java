@@ -84,6 +84,8 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    // Logic for handling signup, checks if credentials exists in the database
+    // before creating an account
     private void handleSignup() {
         if (!isSignup) {
             // Switch to signup mode and show email field
@@ -134,6 +136,7 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
+    // Error helpers
     private void showError(String message) {
         textViewError.setText(message);
         textViewError.setVisibility(View.VISIBLE);
