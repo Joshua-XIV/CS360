@@ -23,6 +23,16 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
+/*
+ * EventDisplayActivity.java
+ *
+ * Main dashboard screen that displays all events belonging to the
+ * currently logged-in user. Handles event loading, navigation drawer
+ * interactions, SMS/notification permissions, and launching the
+ * add-event screen.
+ *
+ * Also prompts the user for a phone number when SMS reminders are enabled.
+ */
 public class EventDisplayActivity extends AppCompatActivity {
     private static final int SMS_PERMISSION_CODE = 100;
     private static final int NOTIFICATION_PERMISSION_CODE = 101;
@@ -49,20 +59,26 @@ public class EventDisplayActivity extends AppCompatActivity {
         recycleViewEvents.setLayoutManager(new GridLayoutManager(this, 1));
         layoutEmptyState = findViewById(R.id.layoutEmptyState);
 
+        // Loads all events
         loadEvents();
 
+        // Opens the add event screen
         addEvent.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddEventActivity.class);
             startActivity(intent);
         });
 
+        // Navigation menu setup
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
         buttonMenu = findViewById(R.id.buttonMenu);
 
+        // Opens the nav menu
         buttonMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
+        // Handles nav menu actions
         navigationView.setNavigationItemSelectedListener(item -> {
+            // Logs the user out and clears all activity
             if (item.getItemId() == R.id.action_logout) {
                 sessionManager.logout();
                 Intent intent = new Intent(this, LoginActivity.class);
@@ -76,17 +92,21 @@ public class EventDisplayActivity extends AppCompatActivity {
             return true;
         });
 
+        // Displays the username in the nav menu
         navigationView.getMenu().findItem(R.id.menu_username).setTitle(sessionManager.getUsername());
+        // Request permissions
         checkSmsPermission();
         checkNotificationPermission();
     }
 
+    // Reload events when returning to this screen
     @Override
     protected void onResume() {
         super.onResume();
         loadEvents();
     }
 
+    // Loads all events for current user and updates empty state
     private void loadEvents() {
         int userId = sessionManager.getUserId();
         List<Event> events = databaseHelper.getEventsByUser(userId);
@@ -102,6 +122,7 @@ public class EventDisplayActivity extends AppCompatActivity {
         }
     }
 
+    // Requests SMS permissions if the user hasn't been asked
     private void checkSmsPermission() {
         if (sessionManager.hasSmsBeenAsked()) return;
 
@@ -122,6 +143,7 @@ public class EventDisplayActivity extends AppCompatActivity {
         d.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.error_red));
     }
 
+    // Requests notification permissions
     private void checkNotificationPermission() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
@@ -140,6 +162,7 @@ public class EventDisplayActivity extends AppCompatActivity {
         }
     }
 
+    // Prompts user to enter a phone number for SMS reminders
     private void showPhoneNumberDialog() {
         EditText editTextPhone = new EditText(this);
         editTextPhone.setHint("Enter your phone number");
@@ -165,6 +188,7 @@ public class EventDisplayActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // Prompt for phone number if permission is granted
         if (requestCode == SMS_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 showPhoneNumberDialog();
