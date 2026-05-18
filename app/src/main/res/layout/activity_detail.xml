@@ -34,6 +34,7 @@
                 android:gravity="center"
                 android:paddingEnd="12dp">
 
+                <!-- Day Date -->
                 <TextView
                     android:id="@+id/textDetailDay"
                     android:layout_width="wrap_content"
@@ -43,6 +44,7 @@
                     android:textColor="?android:attr/textColorPrimary"
                     tools:text="03"/>
 
+                <!-- Month Date -->
                 <TextView
                     android:id="@+id/textDetailMonth"
                     android:layout_width="wrap_content"
@@ -52,6 +54,7 @@
                     android:textAllCaps="true"
                     tools:text="JAN"/>
 
+                <!-- Year Date -->
                 <TextView
                     android:id="@+id/textDetailYear"
                     android:layout_width="wrap_content"
@@ -60,6 +63,7 @@
                     android:textColor="?android:attr/textColorSecondary"
                     tools:text="2027"/>
 
+                <!-- Time Date -->
                 <TextView
                     android:id="@+id/textDetailTime"
                     android:layout_width="wrap_content"
@@ -86,6 +90,7 @@
                 android:orientation="vertical"
                 android:gravity="center_vertical">
 
+                <!-- Event Title -->
                 <TextView
                     android:id="@+id/textDetailTitle"
                     android:layout_width="match_parent"
@@ -96,6 +101,7 @@
                     android:layout_marginBottom="4dp"
                     tools:text="Team Meeting"/>
 
+                <!-- Event Description -->
                 <TextView
                     android:id="@+id/textDetailDesc"
                     android:layout_width="match_parent"
