@@ -62,12 +62,14 @@ public class EventDetailActivity extends AppCompatActivity {
 
         populateEventDetails();
 
+        // Launch edit mode with the current ID
         buttonEditEvent.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddEventActivity.class);
             intent.putExtra("eventId", event.getId());
             startActivity(intent);
         });
 
+        // Shows the confirmation dialog before soft deleting an event
         buttonDeleteEvent.setOnClickListener(v -> {
             AlertDialog d = new AlertDialog.Builder(this)
                     .setTitle("Delete Event")
@@ -85,6 +87,8 @@ public class EventDetailActivity extends AppCompatActivity {
         });
     }
 
+    // Reloads event from the database when the screen comes into focus
+    // so any edits or deletes are updated in the UI
     @Override
     protected void onResume() {
         super.onResume();
@@ -96,6 +100,7 @@ public class EventDetailActivity extends AppCompatActivity {
         }
     }
 
+    // Populates all the text of the current event data
     private void populateEventDetails() {
         Date date = new Date(event.getTimestamp());
 
