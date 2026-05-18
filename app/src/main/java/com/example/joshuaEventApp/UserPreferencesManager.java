@@ -77,11 +77,21 @@ public class UserPreferencesManager {
 
         int index = 0;
         for (String offset : savedOffsets) {
-            offsets[index] = Long.parseLong(offset);
-            index++;
+            try {
+                offsets[index] = Long.parseLong(offset);
+                index++;
+            } catch (NumberFormatException e) {
+                // Ignore invalid saved preference values
+            }
         }
 
-        return offsets;
+        if (index == offsets.length) {
+            return offsets;
+        }
+
+        long[] cleanedOffsets = new long[index];
+        System.arraycopy(offsets, 0, cleanedOffsets, 0, index);
+        return cleanedOffsets;
     }
 
     public static String getReminderLabel(long offset) {
