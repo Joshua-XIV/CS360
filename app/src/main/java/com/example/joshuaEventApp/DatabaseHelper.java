@@ -16,6 +16,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+/*
+ * DatabaseHelper.java
+ *
+ * Manages the local SQLite database for the Event Tracker app.
+ * Contains two tables: users and events.
+ *
+ * Users table stores account credentials with salted SHA-256 hashed passwords
+ * and an optional phone number for SMS reminders.
+ *
+ * Events table stores event data tied to a user account. Events are soft
+ * deleted by setting a deleted flag rather than removing the record.
+ */
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "eventtracker.db";
     private static final int DATABASE_VERSION = 3;
@@ -71,6 +83,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    // Returns true if a user with the given
+    // username or emails exists in the user table
     public boolean userExists(String username, String email) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_USERS, null,
@@ -81,6 +95,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return exists;
     }
 
+    // Creates a new user with a salted and hashed password
+    // Returns false if the username or email already exists
     public boolean createUser(String username, String email, String password) {
         if (userExists(username, email)) return false;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -96,6 +112,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
+    // Validates login credentials by comparing the given password after it's hashed
+    // against the hashed and salted password in the user table
     public boolean validateUser(String username, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_HASHED_PASSWORD, COLUMN_SALT},
@@ -112,6 +130,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return false;
     }
 
+    // Updates the user's password with a new salt and hash
+    // TODO: add to settings page
     public boolean updatePassword(String username, String newPassword) {
         SQLiteDatabase db = this.getWritableDatabase();
         String newSalt = generateSalt();
@@ -122,6 +142,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rows > 0;
     }
 
+    // Updates the user's phone number for any SMS reminders
+    // TODO: add to settings page
     public boolean updatePhone(String username, String phone) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -130,6 +152,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rows > 0;
     }
 
+    // Returns the phone number of a user if exists or null
     public String getPhone(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_PHONE},
@@ -143,6 +166,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
+    // Returns user ID for a given username or -1
     public int getUserId(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_USER_ID},
@@ -157,6 +181,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return -1;
     }
 
+    // Returns all non-deleted events for a user
+    // and is ordered by timestamps ascending
     public List<Event> getEventsByUser(int userId) {
         List<Event> events = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -182,6 +208,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return events;
     }
 
+    // Returns a single event by its ID, or null
     public Event getEventById(int eventId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_EVENTS, null,
@@ -205,13 +232,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    /*
-    DEBUG ONLY
-    public void clearAllEvents() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_EVENTS, null, null);
-    }*/
-
+    // Inserts a new event and returns the inserted row ID, or -1
     public long addEvent(String title, String description, long timestamp, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -223,6 +244,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.insert(TABLE_EVENTS, null, values);
     }
 
+    // Updates an existing event's title, description, and timestamp
     public boolean updateEvent(int eventId, String title, String description, long timestamp) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -233,6 +255,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rows > 0;
     }
 
+    // Soft deletes an event by setting the deleted flag in the user table to 1
     public boolean deleteEvent(int eventId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -242,6 +265,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rows > 0;
     }
 
+    // Generates a random 16 byte salt that is encoded
     private String generateSalt() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
@@ -249,6 +273,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return Base64.encodeToString(salt, Base64.NO_WRAP);
     }
 
+    // Hashes a password using SHA-256 combined with saly
     private String hashPassword(String password, String salt) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
