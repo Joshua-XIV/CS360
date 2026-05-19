@@ -26,16 +26,9 @@ import java.util.Set;
  * SettingsActivity.java
  *
  * Allows users to configure application preferences and account settings.
- *
- * Features:
- * - Enable/disable SMS reminders
- * - Enable/disable push notifications
- * - Configure reminder timing intervals
- * - View/update phone number
- * - Toggle dark mode
- * - Open Android app settings
- *
- * TODO: need to do password updating
+ * Handles SMS and push notification toggles, reminder timing configuration,
+ * phone number management, password updates, dark mode toggle, and
+ * direct access to Android app settings.
  */
 public class SettingsActivity extends AppCompatActivity {
 
@@ -49,21 +42,14 @@ public class SettingsActivity extends AppCompatActivity {
     private SwitchCompat switchNotifications;
     private SwitchCompat switchSms;
     private SwitchCompat switchDarkMode;
-
     private TextView textCurrentPhoneNumber;
     private EditText editPhoneNumber;
 
-    // Display labels for reminder selection dialog
     private final String[] reminderLabels = {
-            "1 Week Before",
-            "3 Days Before",
-            "1 Day Before",
-            "6 Hours Before",
-            "3 Hours Before",
-            "1 Hour Before"
+            "1 Week Before", "3 Days Before", "1 Day Before",
+            "6 Hours Before", "3 Hours Before", "1 Hour Before"
     };
 
-    // Millisecond offsets
     private final long[] reminderValues = {
             UserPreferencesManager.ONE_WEEK,
             UserPreferencesManager.THREE_DAYS,
@@ -91,65 +77,39 @@ public class SettingsActivity extends AppCompatActivity {
     // Configures top toolbar and back button behavior
     private void setupToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbarSettings);
-
         setSupportActionBar(toolbar);
-
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Settings");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
+    // Binds views and sets up button click listeners
     private void bindViews() {
-
         switchNotifications = findViewById(R.id.switchNotifications);
         switchSms = findViewById(R.id.switchSms);
         switchDarkMode = findViewById(R.id.switchDarkMode);
-
         textCurrentPhoneNumber = findViewById(R.id.textCurrentPhoneNumber);
         editPhoneNumber = findViewById(R.id.editPhoneNumber);
 
-        Button btnReminderTimes =
-                findViewById(R.id.btnReminderTimes);
+        Button btnReminderTimes = findViewById(R.id.btnReminderTimes);
+        Button btnOpenPhoneSettings = findViewById(R.id.btnOpenPhoneSettings);
+        Button btnSavePhoneNumber = findViewById(R.id.btnSavePhoneNumber);
+        Button btnUpdatePassword = findViewById(R.id.btnUpdatePassword);
 
-        Button btnOpenPhoneSettings =
-                findViewById(R.id.btnOpenPhoneSettings);
-
-        Button btnSavePhoneNumber =
-                findViewById(R.id.btnSavePhoneNumber);
-
-        Button btnUpdatePassword =
-                findViewById(R.id.btnUpdatePassword);
-
-        btnReminderTimes.setOnClickListener(
-                v -> showReminderTimesDialog()
-        );
-
-        btnOpenPhoneSettings.setOnClickListener(
-                v -> openAppSettings()
-        );
-
-        btnSavePhoneNumber.setOnClickListener(
-                v -> savePhoneNumber()
-        );
-
-        btnUpdatePassword.setOnClickListener(
-                v -> Toast.makeText(
-                        this,
-                        "Password update coming next",
-                        Toast.LENGTH_SHORT
-                ).show()
-        );
+        btnReminderTimes.setOnClickListener(v -> showReminderTimesDialog());
+        btnOpenPhoneSettings.setOnClickListener(v -> openAppSettings());
+        btnSavePhoneNumber.setOnClickListener(v -> savePhoneNumber());
+        btnUpdatePassword.setOnClickListener(v -> updatePassword());
     }
 
-    // Loads saved preferences and user profile data
+    // Loads saved preferences and user profile data into the UI
     private void loadSettings() {
-
         switchNotifications.setChecked(preferencesManager.isNotificationsEnabled());
         switchSms.setChecked(preferencesManager.isSmsEnabled());
         switchDarkMode.setChecked(preferencesManager.isDarkModeEnabled());
-        String phone = databaseHelper.getPhone(sessionManager.getUsername());
 
+        String phone = databaseHelper.getPhone(sessionManager.getUsername());
         if (phone == null || phone.trim().isEmpty()) {
             textCurrentPhoneNumber.setText("Current phone number: Not set");
         } else {
@@ -158,169 +118,132 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    // Attaches all event listeners
+    // Attaches toggle listeners for notifications, SMS, and dark mode
     private void setupListeners() {
-
-        // Push notification toggle
-        switchNotifications.setOnCheckedChangeListener(
-            (buttonView, isChecked) -> {
-
-                if (isChecked && needsNotificationPermission()) {
-                    requestNotificationPermission();
-                }
-
-                preferencesManager
-                        .setNotificationsEnabled(isChecked);
-
-                Toast.makeText(
-                        this,
-                        "Notification setting updated",
-                        Toast.LENGTH_SHORT
-                ).show();
+        switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked && needsNotificationPermission()) requestNotificationPermission();
+            preferencesManager.setNotificationsEnabled(isChecked);
+            Toast.makeText(this, "Notification setting updated", Toast.LENGTH_SHORT).show();
         });
 
-        // SMS reminder toggle
-        switchSms.setOnCheckedChangeListener(
-                (buttonView, isChecked) -> {
+        switchSms.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked && needsSmsPermission()) requestSmsPermission();
+            preferencesManager.setSmsEnabled(isChecked);
+            Toast.makeText(this, "SMS setting updated", Toast.LENGTH_SHORT).show();
+        });
 
-                    if (isChecked && needsSmsPermission()) {
-                        requestSmsPermission();
-                    }
-
-                    preferencesManager
-                            .setSmsEnabled(isChecked);
-
-                    Toast.makeText(
-                            this,
-                            "SMS setting updated",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                });
-
-        // Dark mode toggle
-        switchDarkMode.setOnCheckedChangeListener(
-                (buttonView, isChecked) -> {
-
-                    AppCompatDelegate.setDefaultNightMode(
-                            isChecked
-                                    ? AppCompatDelegate.MODE_NIGHT_YES
-                                    : AppCompatDelegate.MODE_NIGHT_NO
-                    );
-                });
+        switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            preferencesManager.setDarkModeEnabled(isChecked);
+            AppCompatDelegate.setDefaultNightMode(
+                    isChecked ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+        });
     }
 
-    // Opens reminder interval multi-select dialog
+    // Opens a multi-select dialog for configuring reminder intervals
     private void showReminderTimesDialog() {
-
-        Set<String> savedOffsets =
-                preferencesManager.getReminderOffsets();
-
-        boolean[] checkedItems =
-                new boolean[reminderValues.length];
+        Set<String> savedOffsets = preferencesManager.getReminderOffsets();
+        boolean[] checkedItems = new boolean[reminderValues.length];
 
         for (int i = 0; i < reminderValues.length; i++) {
             checkedItems[i] = savedOffsets.contains(String.valueOf(reminderValues[i]));
         }
 
         new AlertDialog.Builder(this)
-
                 .setTitle("Reminder Times")
-
                 .setMultiChoiceItems(reminderLabels, checkedItems,
-                    (dialog, which, isChecked) -> checkedItems[which] = isChecked
-                )
-
-                .setPositiveButton(
-                    "Save",
-                    (dialog, which) -> {
-                        Set<String> selectedOffsets = new LinkedHashSet<>();
-
-                        for (int i = 0; i < reminderValues.length; i++) {
-                            if (checkedItems[i]) {
-                                selectedOffsets.add(String.valueOf(reminderValues[i]));
-                            }
-                        }
-
-                        preferencesManager.setReminderOffsets(selectedOffsets);
-
-                        Toast.makeText(this, "Reminder times updated", Toast.LENGTH_SHORT).show();
-                    })
+                        (dialog, which, isChecked) -> checkedItems[which] = isChecked)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    Set<String> selectedOffsets = new LinkedHashSet<>();
+                    for (int i = 0; i < reminderValues.length; i++) {
+                        if (checkedItems[i]) selectedOffsets.add(String.valueOf(reminderValues[i]));
+                    }
+                    preferencesManager.setReminderOffsets(selectedOffsets);
+                    Toast.makeText(this, "Reminder times updated", Toast.LENGTH_SHORT).show();
+                })
                 .setNegativeButton("Cancel", null)
                 .show();
     }
 
-    // Saves updated phone number
+    // Saves the entered phone number to the database
     private void savePhoneNumber() {
-
         String phone = editPhoneNumber.getText().toString().trim();
-
         if (phone.isEmpty()) {
             Toast.makeText(this, "Enter a phone number", Toast.LENGTH_SHORT).show();
             return;
         }
-
         databaseHelper.updatePhone(sessionManager.getUsername(), phone);
-
         textCurrentPhoneNumber.setText("Current phone number: " + phone);
-
         Toast.makeText(this, "Phone number updated", Toast.LENGTH_SHORT).show();
     }
 
-    // Checks whether SMS permission is missing
+    // Validates and updates the user's password
+    private void updatePassword() {
+        EditText editCurrentPassword = findViewById(R.id.editCurrentPassword);
+        EditText editNewPassword = findViewById(R.id.editNewPassword);
+        EditText editConfirmPassword = findViewById(R.id.editConfirmPassword);
+
+        String currentPassword = editCurrentPassword.getText().toString().trim();
+        String newPassword = editNewPassword.getText().toString().trim();
+        String confirmPassword = editConfirmPassword.getText().toString().trim();
+
+        if (currentPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            Toast.makeText(this, "Please fill in all password fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!databaseHelper.validateUser(sessionManager.getUsername(), currentPassword)) {
+            Toast.makeText(this, "Current password is incorrect", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            Toast.makeText(this, "New passwords do not match", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (newPassword.length() < 6) {
+            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        databaseHelper.updatePassword(sessionManager.getUsername(), newPassword);
+        Toast.makeText(this, "Password updated successfully", Toast.LENGTH_SHORT).show();
+
+        editCurrentPassword.setText("");
+        editNewPassword.setText("");
+        editConfirmPassword.setText("");
+    }
+
+    // Returns true if SMS permission has not been granted
     private boolean needsSmsPermission() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED;
     }
 
-    // Requests SMS permission
+    // Requests SMS permission from the user
     private void requestSmsPermission() {
-        ActivityCompat.requestPermissions(
-            this,
-            new String[]{Manifest.permission.SEND_SMS},
-            SMS_PERMISSION_CODE
-        );
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, SMS_PERMISSION_CODE);
     }
 
-    // Checks notification permission state
+    // Returns true if notification permission has not been granted on Android 13+
     private boolean needsNotificationPermission() {
-
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.TIRAMISU) {
-            return false;
-        }
-
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.TIRAMISU) return false;
         return ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED;
     }
 
-    // Requests notification permission
+    // Requests notification permission on Android 13+
     private void requestNotificationPermission() {
-
-        if (android.os.Build.VERSION.SDK_INT >=
-                android.os.Build.VERSION_CODES.TIRAMISU) {
-
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
-                    NOTIFICATION_PERMISSION_CODE
-            );
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, NOTIFICATION_PERMISSION_CODE);
         }
     }
 
-    // Opens Android app settings page
+    // Opens the Android system settings page for this app
     private void openAppSettings() {
-
-        Intent intent =
-                new Intent(
-                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.fromParts(
-                                "package",
-                                getPackageName(),
-                                null
-                        )
-                );
-
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.fromParts("package", getPackageName(), null));
         startActivity(intent);
     }
 
-    // Handles toolbar back arrow
     @Override
     public boolean onSupportNavigateUp() {
         finish();
