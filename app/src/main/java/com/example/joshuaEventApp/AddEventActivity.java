@@ -128,8 +128,8 @@ public class AddEventActivity extends AppCompatActivity {
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
         dialog.show();
-        dialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.dialog_button));
-        dialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.dialog_button));
+        dialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.text_color_primary));
+        dialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.error_red));
     }
 
     // Shows a custom NumberPicker for selecting the time, hours, minutes, and AM or PM
@@ -176,7 +176,7 @@ public class AddEventActivity extends AppCompatActivity {
                 .create();
 
         timeDialog.show();
-        timeDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.dialog_button));
+        timeDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.text_color_primary));
         timeDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.error_red));
     }
 
