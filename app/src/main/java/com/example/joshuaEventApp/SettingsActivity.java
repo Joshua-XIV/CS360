@@ -20,6 +20,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /*
@@ -123,12 +124,14 @@ public class SettingsActivity extends AppCompatActivity {
         switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked && needsNotificationPermission()) requestNotificationPermission();
             preferencesManager.setNotificationsEnabled(isChecked);
+            rescheduleUserReminders();
             Toast.makeText(this, "Notification setting updated", Toast.LENGTH_SHORT).show();
         });
 
         switchSms.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked && needsSmsPermission()) requestSmsPermission();
             preferencesManager.setSmsEnabled(isChecked);
+            rescheduleUserReminders();
             Toast.makeText(this, "SMS setting updated", Toast.LENGTH_SHORT).show();
         });
 
@@ -158,10 +161,27 @@ public class SettingsActivity extends AppCompatActivity {
                         if (checkedItems[i]) selectedOffsets.add(String.valueOf(reminderValues[i]));
                     }
                     preferencesManager.setReminderOffsets(selectedOffsets);
+                    rescheduleUserReminders();
                     Toast.makeText(this, "Reminder times updated", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+    }
+
+    // Cancels and recreates reminders for all current user's events
+    private void rescheduleUserReminders() {
+        int userId = sessionManager.getUserId();
+        String phone = databaseHelper.getPhone(sessionManager.getUsername());
+        List<Event> events = databaseHelper.getEventsByUser(userId);
+
+        for (Event event : events) {
+            if (event.getTimestamp() <= System.currentTimeMillis()) {
+                continue;
+            }
+
+            SmsScheduler.cancelReminder(this, event.getId());
+            SmsScheduler.scheduleReminder(this, event.getId(), event.getTitle(), event.getTimestamp(), phone);
+        }
     }
 
     // Saves the entered phone number to the database
@@ -173,6 +193,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
         databaseHelper.updatePhone(sessionManager.getUsername(), phone);
         textCurrentPhoneNumber.setText("Current phone number: " + phone);
+        rescheduleUserReminders();
         Toast.makeText(this, "Phone number updated", Toast.LENGTH_SHORT).show();
     }
 
