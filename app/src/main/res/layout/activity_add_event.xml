@@ -52,6 +52,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:hint="@string/enter_event_title"
+
+                app:boxBackgroundMode="outline"
+                app:boxStrokeColor="?attr/colorSecondary"
+                app:hintTextColor="?android:attr/textColorHint"
+
                 app:counterEnabled="true"
                 app:counterMaxLength="30">
 
@@ -81,6 +86,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:hint="@string/enter_event_description_optional"
+
+                app:boxBackgroundMode="outline"
+                app:boxStrokeColor="?attr/colorSecondary"
+                app:hintTextColor="?android:attr/textColorHint"
+
                 app:counterEnabled="true"
                 app:counterMaxLength="120">
 
