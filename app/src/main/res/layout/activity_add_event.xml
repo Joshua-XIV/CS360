@@ -1,143 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
+    android:orientation="vertical"
     android:background="?attr/colorPrimary">
 
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarAddEvent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:titleTextColor="?android:attr/textColorPrimary" />
 
-        <!-- Header -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Event"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="16dp"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:background="?attr/colorPrimary">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fill in the details below"
-            android:textSize="14sp"
-            android:textColor="?android:attr/textColorSecondary"
-            android:layout_marginBottom="32dp"/>
-
-        <!-- Title Field -->
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Event Title"
-            android:textSize="13sp"
-            android:textColor="?android:attr/textColorHint"
-            android:layout_marginBottom="6dp"/>
+            android:orientation="vertical"
+            android:padding="0dp">
 
-        <EditText
-            android:id="@+id/editTextEventTitle"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:hint="Enter event title"
-            android:inputType="text"
-            android:background="@drawable/input_background"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:textSize="15sp"
-            android:layout_marginBottom="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fill in the details below"
+                android:textSize="14sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginBottom="32dp"/>
 
-        <!-- Description Field -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Description"
-            android:textSize="13sp"
-            android:textColor="?android:attr/textColorHint"
-            android:layout_marginBottom="6dp"/>
+            <!-- Title Field -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Event Title"
+                android:textSize="13sp"
+                android:textColor="?android:attr/textColorHint"
+                android:layout_marginBottom="6dp"/>
 
-        <EditText
-            android:id="@+id/editTextEventDesc"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:hint="Enter event description (optional)"
-            android:inputType="textMultiLine"
-            android:gravity="top"
-            android:background="@drawable/input_background"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="12dp"
-            android:textSize="15sp"
-            android:layout_marginBottom="20dp"/>
+            <EditText
+                android:id="@+id/editTextEventTitle"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:hint="Enter event title"
+                android:inputType="text"
+                android:background="@drawable/input_background"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textSize="15sp"
+                android:layout_marginBottom="20dp"/>
 
-        <!-- Date Field -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Date"
-            android:textSize="13sp"
-            android:textColor="?android:attr/textColorHint"
-            android:layout_marginBottom="6dp"/>
+            <!-- Description Field -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:textSize="13sp"
+                android:textColor="?android:attr/textColorHint"
+                android:layout_marginBottom="6dp"/>
 
-        <Button
-            android:id="@+id/buttonPickDate"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="Select Date"
-            android:textSize="15sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:backgroundTint="?attr/colorPrimaryVariant"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_marginBottom="20dp"/>
+            <EditText
+                android:id="@+id/editTextEventDesc"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:hint="Enter event description (optional)"
+                android:inputType="textMultiLine"
+                android:gravity="top"
+                android:background="@drawable/input_background"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:textSize="15sp"
+                android:layout_marginBottom="20dp"/>
 
-        <!-- Time Field -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Time"
-            android:textSize="13sp"
-            android:textColor="?android:attr/textColorHint"
-            android:layout_marginBottom="6dp"/>
+            <!-- Date Field -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Date"
+                android:textSize="13sp"
+                android:textColor="?android:attr/textColorHint"
+                android:layout_marginBottom="6dp"/>
 
-        <Button
-            android:id="@+id/buttonPickTime"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="Select Time"
-            android:textSize="15sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:backgroundTint="?attr/colorPrimaryVariant"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_marginBottom="32dp"/>
+            <Button
+                android:id="@+id/buttonPickDate"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Select Date"
+                android:textSize="15sp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:backgroundTint="?attr/colorPrimaryVariant"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_marginBottom="20dp"/>
 
-        <!-- Save Button -->
-        <Button
-            android:id="@+id/buttonSaveEvent"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="Save Event"
-            android:textSize="16sp"
-            android:textColor="?attr/colorOnSecondary"
-            android:backgroundTint="?attr/colorSecondary"
-            android:layout_marginBottom="12dp"/>
+            <!-- Time Field -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Time"
+                android:textSize="13sp"
+                android:textColor="?android:attr/textColorHint"
+                android:layout_marginBottom="6dp"/>
 
-        <!-- Cancel Button -->
-        <Button
-            android:id="@+id/buttonCancelEvent"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="Cancel"
-            android:textSize="16sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:backgroundTint="?attr/colorPrimaryVariant"
-            android:strokeColor="?android:attr/textColorPrimary"
-            android:layout_marginBottom="24dp"/>
+            <Button
+                android:id="@+id/buttonPickTime"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Select Time"
+                android:textSize="15sp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:backgroundTint="?attr/colorPrimaryVariant"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_marginBottom="32dp"/>
 
-    </LinearLayout>
+            <!-- Save Button -->
+            <Button
+                android:id="@+id/buttonSaveEvent"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Save Event"
+                android:textSize="16sp"
+                android:textColor="?attr/colorOnSecondary"
+                android:backgroundTint="?attr/colorSecondary"
+                android:layout_marginBottom="12dp"/>
 
-</ScrollView>
+            <!-- Cancel Button -->
+            <Button
+                android:id="@+id/buttonCancelEvent"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Cancel"
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:backgroundTint="?attr/colorPrimaryVariant"
+                android:strokeColor="?android:attr/textColorPrimary"
+                android:layout_marginBottom="24dp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
