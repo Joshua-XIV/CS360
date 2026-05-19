@@ -4,11 +4,14 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -31,7 +34,7 @@ import java.util.Locale;
  */
 public class AddEventActivity extends AppCompatActivity {
     private EditText editTextEventTitle, editTextEventDesc;
-    private Button buttonPickDate, buttonPickTime, buttonSaveEvent, buttonCancelEvent;
+    private Button buttonPickDate, buttonPickTime;
     private DatabaseHelper databaseHelper;
     private SessionManager sessionManager;
     private int selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute, selectedAmPm;
@@ -59,8 +62,6 @@ public class AddEventActivity extends AppCompatActivity {
         editTextEventDesc = findViewById(R.id.editTextEventDesc);
         buttonPickDate = findViewById(R.id.buttonPickDate);
         buttonPickTime = findViewById(R.id.buttonPickTime);
-        buttonSaveEvent = findViewById(R.id.buttonSaveEvent);
-        buttonCancelEvent = findViewById(R.id.buttonCancelEvent);
 
         // Check if we are in edit mode
         editEventId = getIntent().getIntExtra("eventId", -1);
@@ -69,7 +70,6 @@ public class AddEventActivity extends AppCompatActivity {
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setTitle("Edit Event");
             }
-            buttonSaveEvent.setText("Update Event");
             populateExistingEvent();
         } else {
             if (getSupportActionBar() != null) {
@@ -79,8 +79,6 @@ public class AddEventActivity extends AppCompatActivity {
 
         buttonPickDate.setOnClickListener(v -> showDatePicker());
         buttonPickTime.setOnClickListener(v -> showTimePicker());
-        buttonSaveEvent.setOnClickListener(v -> saveEvent());
-        buttonCancelEvent.setOnClickListener(v -> finish());
     }
 
     // Pre-populates fields with event data if we're in edit mode
@@ -233,8 +231,24 @@ public class AddEventActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        finish();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_add_event, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        if (item.getItemId() == R.id.action_save) {
+            saveEvent();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
