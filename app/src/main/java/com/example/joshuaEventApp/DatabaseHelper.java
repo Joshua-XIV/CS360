@@ -13,7 +13,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /*
@@ -131,25 +130,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Updates the user's password with a new salt and hash
-    // TODO: add to settings page
-    public boolean updatePassword(String username, String newPassword) {
+    public void updatePassword(String username, String newPassword) {
         SQLiteDatabase db = this.getWritableDatabase();
         String newSalt = generateSalt();
         ContentValues values = new ContentValues();
         values.put(COLUMN_HASHED_PASSWORD, hashPassword(newPassword, newSalt));
         values.put(COLUMN_SALT, newSalt);
-        int rows = db.update(TABLE_USERS, values, COLUMN_USERNAME + "=?", new String[]{username});
-        return rows > 0;
+        db.update(TABLE_USERS, values, COLUMN_USERNAME + "=?", new String[]{username});
     }
 
     // Updates the user's phone number for any SMS reminders
-    // TODO: add to settings page
-    public boolean updatePhone(String username, String phone) {
+    public void updatePhone(String username, String phone) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_PHONE, phone);
-        int rows = db.update(TABLE_USERS, values, COLUMN_USERNAME + "=?", new String[]{username});
-        return rows > 0;
+        db.update(TABLE_USERS, values, COLUMN_USERNAME + "=?", new String[]{username});
     }
 
     // Returns the phone number of a user if exists or null
@@ -245,24 +240,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Updates an existing event's title, description, and timestamp
-    public boolean updateEvent(int eventId, String title, String description, long timestamp) {
+    public void updateEvent(int eventId, String title, String description, long timestamp) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_EVENT_TITLE, title);
         values.put(COLUMN_EVENT_DESC, description);
         values.put(COLUMN_EVENT_TIMESTAMP, timestamp);
-        int rows = db.update(TABLE_EVENTS, values, COLUMN_EVENT_ID + "=?", new String[]{String.valueOf(eventId)});
-        return rows > 0;
+        db.update(TABLE_EVENTS, values, COLUMN_EVENT_ID + "=?", new String[]{String.valueOf(eventId)});
     }
 
     // Soft deletes an event by setting the deleted flag in the user table to 1
-    public boolean deleteEvent(int eventId) {
+    public void deleteEvent(int eventId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_EVENT_DELETED, 1);
-        int rows = db.update(TABLE_EVENTS, values, COLUMN_EVENT_ID + "=?",
+        db.update(TABLE_EVENTS, values, COLUMN_EVENT_ID + "=?",
                 new String[]{String.valueOf(eventId)});
-        return rows > 0;
     }
 
     // Generates a random 16 byte salt that is encoded
@@ -273,7 +266,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return Base64.encodeToString(salt, Base64.NO_WRAP);
     }
 
-    // Hashes a password using SHA-256 combined with saly
+    // Hashes a password using SHA-256 combined with salt
     private String hashPassword(String password, String salt) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

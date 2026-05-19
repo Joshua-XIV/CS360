@@ -1,5 +1,6 @@
 package com.example.joshuaEventApp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
@@ -132,11 +133,9 @@ public class EventDisplayActivity extends AppCompatActivity {
         AlertDialog d = new AlertDialog.Builder(this)
                 .setTitle("SMS Notifications")
                 .setMessage("Event Tracker would like to send you SMS reminders before your events. Would you like to enable this?")
-                .setPositiveButton("Allow", (dialog, which) -> {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.SEND_SMS},
-                            SMS_PERMISSION_CODE);
-                })
+                .setPositiveButton("Allow", (dialog, which) -> ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.SEND_SMS},
+                        SMS_PERMISSION_CODE))
                 .setNegativeButton("No Thanks", null)
                 .create();
         d.show();
@@ -187,15 +186,14 @@ public class EventDisplayActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         // Prompt for phone number if permission is granted
         if (requestCode == SMS_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 showPhoneNumberDialog();
             }
-        } else if (requestCode == NOTIFICATION_PERMISSION_CODE) {
-            // app should just continue regardless
-        }
+        }  // app should just continue regardless
+
     }
 }

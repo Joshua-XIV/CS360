@@ -69,7 +69,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
-        // Displays notificaiton
+        // Displays notification
         notificationManager.notify(notificationId, builder.build());
     }
 }
