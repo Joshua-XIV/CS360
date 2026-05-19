@@ -5,138 +5,155 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
     android:background="?attr/colorPrimary">
 
-    <!-- Event Card -->
-    <com.google.android.material.card.MaterialCardView
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarDetail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:layout_marginTop="72dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="1dp"
-        app:strokeWidth="2dp"
-        app:strokeColor="?android:attr/textColorHint"
-        app:cardBackgroundColor="?attr/colorPrimaryVariant">
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:titleTextColor="?android:attr/textColorPrimary"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <!-- Left: Date Block -->
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <!-- Event Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:paddingEnd="12dp">
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="1dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="?android:attr/textColorHint"
+                app:cardBackgroundColor="?attr/colorPrimaryVariant">
 
-                <!-- Day Date -->
-                <TextView
-                    android:id="@+id/textDetailDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    android:textColor="?android:attr/textColorPrimary"
-                    tools:text="03"/>
-
-                <!-- Month Date -->
-                <TextView
-                    android:id="@+id/textDetailMonth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="13sp"
-                    android:textColor="?android:attr/textColorSecondary"
-                    android:textAllCaps="true"
-                    tools:text="JAN"/>
-
-                <!-- Year Date -->
-                <TextView
-                    android:id="@+id/textDetailYear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="13sp"
-                    android:textColor="?android:attr/textColorSecondary"
-                    tools:text="2027"/>
-
-                <!-- Time Date -->
-                <TextView
-                    android:id="@+id/textDetailTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="11sp"
-                    android:textColor="?android:attr/textColorSecondary"
-                    tools:text="7:00 PM"/>
-
-            </LinearLayout>
-
-            <!-- Divider -->
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="?android:attr/textColorHint"
-                android:alpha="0.3"
-                android:layout_marginEnd="12dp"/>
-
-            <!-- Right: Title and Description -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center_vertical">
-
-                <!-- Event Title -->
-                <TextView
-                    android:id="@+id/textDetailTitle"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:layout_marginBottom="4dp"
-                    tools:text="Team Meeting"/>
+                    android:orientation="horizontal"
+                    android:padding="12dp">
 
-                <!-- Event Description -->
-                <TextView
-                    android:id="@+id/textDetailDesc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="?android:attr/textColorSecondary"
-                    tools:text="Discuss Q3 goals and review project progress with the team"/>
+                    <!-- Left Date Block -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:paddingEnd="12dp">
 
-            </LinearLayout>
+                        <TextView
+                            android:id="@+id/textDetailDay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="28sp"
+                            android:textStyle="bold"
+                            android:textColor="?android:attr/textColorPrimary"
+                            tools:text="03"/>
+
+                        <TextView
+                            android:id="@+id/textDetailMonth"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:textAllCaps="true"
+                            tools:text="JAN"/>
+
+                        <TextView
+                            android:id="@+id/textDetailYear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp"
+                            android:textColor="?android:attr/textColorSecondary"
+                            tools:text="2027"/>
+
+                        <TextView
+                            android:id="@+id/textDetailTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="11sp"
+                            android:textColor="?android:attr/textColorSecondary"
+                            tools:text="7:00 PM"/>
+
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="?android:attr/textColorHint"
+                        android:alpha="0.3"
+                        android:layout_marginEnd="12dp"/>
+
+                    <!-- Right Content -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/textDetailTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:layout_marginBottom="4dp"
+                            tools:text="Team Meeting"/>
+
+                        <TextView
+                            android:id="@+id/textDetailDesc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="?android:attr/textColorSecondary"
+                            tools:text="Discuss Q3 goals and review project progress"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Edit -->
+            <Button
+                android:id="@+id/buttonEditEvent"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Edit Event"
+                android:textSize="16sp"
+                android:textColor="?attr/colorOnSecondary"
+                android:backgroundTint="?attr/colorSecondary"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Delete -->
+            <Button
+                android:id="@+id/buttonDeleteEvent"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Delete Event"
+                android:textSize="16sp"
+                android:textColor="?attr/colorError"
+                android:strokeColor="?attr/colorError"
+                android:layout_marginBottom="24dp"/>
 
         </LinearLayout>
 
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Edit Button -->
-    <Button
-        android:id="@+id/buttonEditEvent"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:text="Edit Event"
-        android:textSize="16sp"
-        android:textColor="?attr/colorOnSecondary"
-        android:backgroundTint="?attr/colorSecondary"
-        android:layout_marginBottom="12dp"/>
-
-    <!-- Delete Button -->
-    <Button
-        android:id="@+id/buttonDeleteEvent"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:text="Delete Event"
-        android:textSize="16sp"
-        android:textColor="?attr/colorError"
-        android:strokeColor="?attr/colorError"
-        android:layout_marginBottom="24dp"/>
+    </ScrollView>
 
 </LinearLayout>
