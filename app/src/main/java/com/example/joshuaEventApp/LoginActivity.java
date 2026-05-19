@@ -1,6 +1,8 @@
 package com.example.joshuaEventApp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -31,6 +33,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        UserPreferencesManager preferencesManager = new UserPreferencesManager(this);
+        AppCompatDelegate.setDefaultNightMode(
+                preferencesManager.isDarkModeEnabled()
+                        ? AppCompatDelegate.MODE_NIGHT_YES
+                        : AppCompatDelegate.MODE_NIGHT_NO);
+
         setContentView(R.layout.activity_login);
 
         databaseHelper = new DatabaseHelper(this);
