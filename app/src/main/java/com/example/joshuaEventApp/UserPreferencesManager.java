@@ -22,6 +22,7 @@ public class UserPreferencesManager {
     private static final String KEY_SMS_ENABLED = "smsEnabled";
     private static final String KEY_NOTIFICATIONS_ENABLED = "notificationsEnabled";
     private static final String KEY_REMINDER_OFFSETS = "reminderOffsets";
+    private static final String KEY_DARK_MODE = "darkMode";
 
     public static final long ONE_WEEK = 7L * 24 * 60 * 60 * 1000;
     public static final long THREE_DAYS = 3L * 24 * 60 * 60 * 1000;
@@ -54,6 +55,14 @@ public class UserPreferencesManager {
         prefs.edit()
                 .putBoolean(KEY_NOTIFICATIONS_ENABLED, enabled)
                 .apply();
+    }
+
+    public boolean isDarkModeEnabled() {
+        return prefs.getBoolean(KEY_DARK_MODE, false);
+    }
+
+    public void setDarkModeEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_DARK_MODE, enabled).apply();
     }
 
     public Set<String> getReminderOffsets() {

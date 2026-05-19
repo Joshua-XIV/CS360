@@ -145,31 +145,15 @@ public class SettingsActivity extends AppCompatActivity {
     // Loads saved preferences and user profile data
     private void loadSettings() {
 
-        switchNotifications.setChecked(
-                preferencesManager.isNotificationsEnabled()
-        );
-
-        switchSms.setChecked(
-                preferencesManager.isSmsEnabled()
-        );
-
-        String phone =
-                databaseHelper.getPhone(
-                        sessionManager.getUsername()
-                );
+        switchNotifications.setChecked(preferencesManager.isNotificationsEnabled());
+        switchSms.setChecked(preferencesManager.isSmsEnabled());
+        switchDarkMode.setChecked(preferencesManager.isDarkModeEnabled());
+        String phone = databaseHelper.getPhone(sessionManager.getUsername());
 
         if (phone == null || phone.trim().isEmpty()) {
-
-            textCurrentPhoneNumber.setText(
-                    "Current phone number: Not set"
-            );
-
+            textCurrentPhoneNumber.setText("Current phone number: Not set");
         } else {
-
-            textCurrentPhoneNumber.setText(
-                    "Current phone number: " + phone
-            );
-
+            textCurrentPhoneNumber.setText("Current phone number: " + phone);
             editPhoneNumber.setText(phone);
         }
     }
@@ -179,21 +163,21 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Push notification toggle
         switchNotifications.setOnCheckedChangeListener(
-                (buttonView, isChecked) -> {
+            (buttonView, isChecked) -> {
 
-                    if (isChecked && needsNotificationPermission()) {
-                        requestNotificationPermission();
-                    }
+                if (isChecked && needsNotificationPermission()) {
+                    requestNotificationPermission();
+                }
 
-                    preferencesManager
-                            .setNotificationsEnabled(isChecked);
+                preferencesManager
+                        .setNotificationsEnabled(isChecked);
 
-                    Toast.makeText(
-                            this,
-                            "Notification setting updated",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                });
+                Toast.makeText(
+                        this,
+                        "Notification setting updated",
+                        Toast.LENGTH_SHORT
+                ).show();
+        });
 
         // SMS reminder toggle
         switchSms.setOnCheckedChangeListener(
