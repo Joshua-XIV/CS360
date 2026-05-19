@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="?attr/colorPrimary">
 
@@ -24,12 +25,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="0dp">
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fill in the details below"
+                android:text="@string/fill_in_the_details_below"
                 android:textSize="14sp"
                 android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginBottom="32dp"/>
@@ -38,51 +42,67 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Event Title"
+                android:text="@string/event_title"
                 android:textSize="13sp"
                 android:textColor="?android:attr/textColorHint"
                 android:layout_marginBottom="6dp"/>
 
-            <EditText
-                android:id="@+id/editTextEventTitle"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:hint="Enter event title"
-                android:inputType="text"
-                android:background="@drawable/input_background"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textSize="15sp"
-                android:layout_marginBottom="20dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:hint="@string/enter_event_title"
+                app:counterEnabled="true"
+                app:counterMaxLength="30">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextEventTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:inputType="text"
+                    android:maxLength="30"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textSize="15sp"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Description Field -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Description"
+                android:text="@string/description"
                 android:textSize="13sp"
                 android:textColor="?android:attr/textColorHint"
                 android:layout_marginBottom="6dp"/>
 
-            <EditText
-                android:id="@+id/editTextEventDesc"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:hint="Enter event description (optional)"
-                android:inputType="textMultiLine"
-                android:gravity="top"
-                android:background="@drawable/input_background"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="12dp"
-                android:textSize="15sp"
-                android:layout_marginBottom="20dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:hint="@string/enter_event_description_optional"
+                app:counterEnabled="true"
+                app:counterMaxLength="120">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextEventDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:inputType="textMultiLine"
+                    android:gravity="top"
+                    android:maxLength="120"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="12dp"
+                    android:textSize="15sp"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Date Field -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Date"
+                android:text="@string/date"
                 android:textSize="13sp"
                 android:textColor="?android:attr/textColorHint"
                 android:layout_marginBottom="6dp"/>
@@ -91,7 +111,7 @@
                 android:id="@+id/buttonPickDate"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:text="Select Date"
+                android:text="@string/select_date"
                 android:textSize="15sp"
                 android:textColor="?android:attr/textColorPrimary"
                 android:backgroundTint="?attr/colorPrimaryVariant"
@@ -102,7 +122,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Time"
+                android:text="@string/time"
                 android:textSize="13sp"
                 android:textColor="?android:attr/textColorHint"
                 android:layout_marginBottom="6dp"/>
@@ -111,7 +131,7 @@
                 android:id="@+id/buttonPickTime"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:text="Select Time"
+                android:text="@string/select_time"
                 android:textSize="15sp"
                 android:textColor="?android:attr/textColorPrimary"
                 android:backgroundTint="?attr/colorPrimaryVariant"
@@ -123,7 +143,7 @@
                 android:id="@+id/buttonSaveEvent"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:text="Save Event"
+                android:text="@string/save_event"
                 android:textSize="16sp"
                 android:textColor="?attr/colorOnSecondary"
                 android:backgroundTint="?attr/colorSecondary"
@@ -135,7 +155,7 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:textSize="16sp"
                 android:textColor="?android:attr/textColorPrimary"
                 android:backgroundTint="?attr/colorPrimaryVariant"

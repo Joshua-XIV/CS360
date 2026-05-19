@@ -38,4 +38,17 @@
     <string name="account">Account</string>
     <string name="reminder">Reminder</string>
     <string name="info_settings">Manage reminders, account info, and appearance</string>
+    <string name="restore">Restore</string>
+    <string name="delete">Delete</string>
+    <string name="fill_in_the_details_below">Fill in the details below</string>
+    <string name="event_title">Event Title</string>
+    <string name="enter_event_title">Enter event title</string>
+    <string name="description">Description</string>
+    <string name="enter_event_description_optional">Enter event description (optional)</string>
+    <string name="date">Date</string>
+    <string name="select_date">Select Date</string>
+    <string name="time">Time</string>
+    <string name="select_time">Select Time</string>
+    <string name="save_event">Save Event</string>
+    <string name="cancel">Cancel</string>
 </resources>

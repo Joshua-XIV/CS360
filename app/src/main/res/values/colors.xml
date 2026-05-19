@@ -20,4 +20,5 @@
     <color name="dark_surface">#16213E</color>
     <color name="light_grey">#F5F5F5</color>
     <color name="dark_text">#F5F5F5</color>
+    <color name="filter_selected_fill">#1A1B1E4B</color>
 </resources>

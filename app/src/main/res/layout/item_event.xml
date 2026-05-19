@@ -19,11 +19,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="12dp">
 
-            <!-- Left: Date Block -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -31,7 +30,6 @@
                 android:gravity="center"
                 android:paddingEnd="12dp">
 
-                <!-- Day Date -->
                 <TextView
                     android:id="@+id/textEventDay"
                     android:layout_width="wrap_content"
@@ -41,7 +39,6 @@
                     android:textColor="?android:attr/textColorPrimary"
                     tools:text="03"/>
 
-                <!-- Month Date -->
                 <TextView
                     android:id="@+id/textEventMonth"
                     android:layout_width="wrap_content"
@@ -51,7 +48,6 @@
                     android:textAllCaps="true"
                     tools:text="JAN"/>
 
-                <!-- Year Date -->
                 <TextView
                     android:id="@+id/textEventYear"
                     android:layout_width="wrap_content"
@@ -61,7 +57,6 @@
                     android:textAllCaps="true"
                     tools:text="2027"/>
 
-                <!-- Time Date -->
                 <TextView
                     android:id="@+id/textEventTime"
                     android:layout_width="wrap_content"
@@ -72,7 +67,6 @@
 
             </LinearLayout>
 
-            <!-- Divider -->
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
@@ -80,71 +74,108 @@
                 android:alpha="0.3"
                 android:layout_marginEnd="12dp"/>
 
-            <!-- Right: Title, Description, Delete -->
-            <RelativeLayout
+            <FrameLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="100dp"
                 android:layout_weight="1">
 
-                <!-- Event Title -->
-                <TextView
-                    android:id="@+id/textEventTitle"
+                <LinearLayout
+                    android:id="@+id/layoutEventTextContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:layout_marginBottom="4dp"
-                    tools:text="Team Meeting"/>
+                    android:orientation="vertical"
+                    android:layout_marginBottom="12dp">
 
-                <!-- Divider -->
-                <View
-                    android:id="@+id/dividerTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/textColorHint"
-                    android:alpha="0.3"
-                    android:layout_below="@id/textEventTitle"
-                    android:layout_marginEnd="12dp"/>
+                    <TextView
+                        android:id="@+id/textEventTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:layout_marginBottom="4dp"
+                        tools:text="Team Meeting"/>
 
-                <!-- Event Description -->
-                <TextView
-                    android:id="@+id/textEventDesc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="?android:attr/textColorSecondary"
-                    android:maxLines="3"
-                    android:ellipsize="end"
-                    android:layout_below="@id/dividerTitle"
-                    tools:text="Discuss Q3 goals and review project progress with the team"/>
+                    <View
+                        android:id="@+id/dividerTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?android:attr/textColorHint"
+                        android:alpha="0.3"
+                        android:layout_marginEnd="12dp"/>
+
+                    <TextView
+                        android:id="@+id/textEventDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:layout_marginTop="4dp"
+                        tools:text="Discuss Q3 goals and review project progress with the team"/>
+
+                </LinearLayout>
 
                 <ImageButton
-                android:id="@+id/buttonDeleteEvent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:src="@android:drawable/ic_menu_delete"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/delete_event"
-                app:tint="?attr/colorError"/>
+                    android:id="@+id/buttonDeleteEvent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:src="@android:drawable/ic_menu_delete"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/delete_event"
+                    app:tint="?attr/colorError"/>
 
-            </RelativeLayout>
+                <LinearLayout
+                    android:id="@+id/layoutDeletedActions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="end"
+                    android:visibility="gone"
+                    android:layout_gravity="bottom|end">
+
+                    <Button
+                        android:id="@+id/buttonRestoreEvent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:minWidth="0dp"
+                        android:text="@string/restore"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="@color/event_far"
+                        android:layout_marginEnd="8dp"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"/>
+
+                    <Button
+                        android:id="@+id/buttonPermanentDeleteEvent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:minWidth="0dp"
+                        android:text="@string/delete"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="@color/error_red"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"/>
+
+                </LinearLayout>
+
+            </FrameLayout>
 
         </LinearLayout>
 
-        <!-- Progress Bar -->
         <ProgressBar
             android:id="@+id/eventProgressBar"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="6dp"
             android:max="100"
-            android:layout_marginTop="0dp"
             tools:progress="100"/>
 
     </LinearLayout>

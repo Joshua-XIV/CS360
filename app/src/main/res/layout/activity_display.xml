@@ -45,12 +45,56 @@
                     android:textColor="?android:attr/textColorPrimary"
                     android:gravity="center"/>
 
-                <!-- Placeholder to balance the layout -->
                 <View
                     android:layout_width="24dp"
                     android:layout_height="24dp"/>
 
             </LinearLayout>
+
+            <!-- Event Filter -->
+            <RadioGroup
+                android:id="@+id/radioEventFilter"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginBottom="8dp">
+
+                <RadioButton
+                    android:id="@+id/radioUpcoming"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Upcoming"
+                    android:gravity="center"
+                    android:button="@null"
+                    android:background="@drawable/filter_tab_selector"
+                    android:textColor="?attr/colorSecondary"/>
+
+                <RadioButton
+                    android:id="@+id/radioPast"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Past"
+                    android:gravity="center"
+                    android:button="@null"
+                    android:background="@drawable/filter_tab_selector"
+                    android:textColor="?attr/colorSecondary"/>
+
+                <RadioButton
+                    android:id="@+id/radioDeleted"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Deleted"
+                    android:gravity="center"
+                    android:button="@null"
+                    android:background="@drawable/filter_tab_selector"
+                    android:textColor="?attr/colorSecondary"/>
+
+            </RadioGroup>
 
             <!-- Event Grid -->
             <androidx.recyclerview.widget.RecyclerView
@@ -74,6 +118,7 @@
                 android:visibility="gone">
 
                 <TextView
+                    android:id="@+id/textEmptyTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/no_events"
@@ -83,6 +128,7 @@
                     android:layout_marginBottom="8dp"/>
 
                 <TextView
+                    android:id="@+id/textEmptySubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/add_hint"
