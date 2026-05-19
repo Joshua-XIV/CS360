@@ -26,8 +26,8 @@ import java.util.Locale;
  *
  * On save, the selected date and time are combined into a Unix timestamp
  * and stored in the database. SMS and push notification reminders are
- * scheduled via SmsScheduler for 24 hours, 3 hours, and 1 hour before
- * the event. If in edit mode, existing reminders should be canceled and rescheduled.
+ * scheduled via SmsScheduler before the event based on user configuration.
+ * If in edit mode, existing reminders should be canceled and rescheduled.
  */
 public class AddEventActivity extends AppCompatActivity {
     private EditText editTextEventTitle, editTextEventDesc;
