@@ -130,6 +130,7 @@ public class SmsScheduler {
         );
 
         alarmManager.cancel(smsPendingIntent);
+        smsPendingIntent.cancel();
     }
 
     // Cancel Notification reminders
@@ -145,6 +146,7 @@ public class SmsScheduler {
         );
 
         alarmManager.cancel(notifPendingIntent);
+        notifPendingIntent.cancel();
     }
 
     private static int getSmsRequestCode(int eventId, int reminderIndex) {

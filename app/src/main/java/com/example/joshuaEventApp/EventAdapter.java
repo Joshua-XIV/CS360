@@ -7,7 +7,9 @@ import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -32,11 +34,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private final List<Event> eventList;
     private final DatabaseHelper databaseHelper;
     private final OnEventDeletedListener deleteListener;
+    private boolean isDeletedMode;
 
-    public EventAdapter(List<Event> eventList, DatabaseHelper databaseHelper, OnEventDeletedListener deleteListener) {
+    public EventAdapter(List<Event> eventList, DatabaseHelper databaseHelper,
+                        OnEventDeletedListener deleteListener, boolean isDeletedMode) {
         this.eventList = eventList;
         this.databaseHelper = databaseHelper;
         this.deleteListener = deleteListener;
+        this.isDeletedMode = isDeletedMode;
     }
 
     @NonNull
@@ -74,28 +79,107 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             v.getContext().startActivity(intent);
         });
 
-        // A delete button with confirmation dialog
-        ImageButton buttonDelete = holder.itemView.findViewById(R.id.buttonDeleteEvent);
-        buttonDelete.setOnClickListener(v -> {
-            AlertDialog d = new AlertDialog.Builder(v.getContext())
-                    .setTitle("Delete Event")
-                    .setMessage("Are you sure you want to delete this event?")
-                    .setPositiveButton("Delete", (dialog, which) -> {
-                        SmsScheduler.cancelReminder(v.getContext(), event.getId());
-                        databaseHelper.deleteEvent(event.getId());
-                        deleteListener.onEventDeleted();
-                    })
-                    .setNegativeButton("Cancel", null)
-                    .create();
-            d.show();
-            d.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(v.getContext().getColor(R.color.dialog_button));
-            d.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(v.getContext().getColor(R.color.error_red));
-        });
+        if (isDeletedMode) {
+            holder.buttonDeleteEvent.setVisibility(View.GONE);
+            holder.layoutDeletedActions.setVisibility(View.VISIBLE);
+
+            holder.buttonRestoreEvent.setOnClickListener(v ->
+                    showRestoreConfirmation(v, event));
+
+            holder.buttonPermanentDeleteEvent.setOnClickListener(v ->
+                showPermanentDeleteConfirmation(v, event));
+
+            holder.itemView.setOnClickListener(null);
+
+        } else {
+            holder.buttonDeleteEvent.setVisibility(View.VISIBLE);
+            holder.layoutDeletedActions.setVisibility(View.GONE);
+
+            holder.itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(v.getContext(), EventDetailActivity.class);
+                intent.putExtra("eventId", event.getId());
+                v.getContext().startActivity(intent);
+            });
+
+            holder.buttonDeleteEvent.setOnClickListener(v -> showDeleteConfirmation(v, event));
+        }
     }
 
     @Override
     public int getItemCount() {
         return eventList.size();
+    }
+
+    // Shows restore/permanent delete options for deleted events
+    private void showDeletedEventOptions(View v, Event event) {
+        String[] options = {"Restore", "Permanently Delete"};
+
+        AlertDialog d = new AlertDialog.Builder(v.getContext())
+                .setTitle(event.getTitle())
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        databaseHelper.restoreEvent(event.getId());
+                        deleteListener.onEventDeleted();
+                    } else {
+                        showPermanentDeleteConfirmation(v, event);
+                    }
+                })
+                .create();
+
+        d.show();
+    }
+
+    // Confirms permanent deletion
+    private void showPermanentDeleteConfirmation(View v, Event event) {
+        AlertDialog d = new AlertDialog.Builder(v.getContext())
+                .setTitle("Permanent Delete")
+                .setMessage("This cannot be undone.")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    databaseHelper.permanentlyDeleteEvent(event.getId());
+                    deleteListener.onEventDeleted();
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+
+        d.show();
+        d.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(v.getContext().getColor(R.color.error_red));
+        d.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(v.getContext().getColor(R.color.dialog_button));
+    }
+
+    // Confirms soft deletion of active events
+    private void showDeleteConfirmation(View v, Event event) {
+        AlertDialog d = new AlertDialog.Builder(v.getContext())
+                .setTitle("Delete Event")
+                .setMessage("Are you sure you want to delete this event?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    SmsScheduler.cancelReminder(v.getContext(), event.getId());
+                    databaseHelper.deleteEvent(event.getId());
+                    deleteListener.onEventDeleted();
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+
+        d.show();
+        d.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(v.getContext().getColor(R.color.dialog_button));
+        d.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(v.getContext().getColor(R.color.error_red));
+    }
+
+    // Confirms restoring a deleted event
+    private void showRestoreConfirmation(View v, Event event) {
+        AlertDialog d = new AlertDialog.Builder(v.getContext())
+                .setTitle("Restore Event")
+                .setMessage("Restore this event?")
+                .setPositiveButton("Restore", (dialog, which) -> {
+                    databaseHelper.restoreEvent(event.getId());
+                    deleteListener.onEventDeleted();
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+
+        d.show();
+
+        d.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(v.getContext().getColor(R.color.event_far));
+        d.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(v.getContext().getColor(R.color.error_red));
     }
 
     // Updates the progress bar color based on how soon the event is
@@ -128,6 +212,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         TextView textEventDay, textEventMonth, textEventTime,
                  textEventTitle, textEventDesc, textEventYear;
         ImageButton buttonDeleteEvent;
+        Button buttonRestoreEvent, buttonPermanentDeleteEvent;
+        LinearLayout layoutDeletedActions;
         ProgressBar progressBar;
 
         public EventViewHolder(@NonNull View itemView) {
@@ -139,6 +225,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             textEventDesc = itemView.findViewById(R.id.textEventDesc);
             textEventYear = itemView.findViewById(R.id.textEventYear);
             buttonDeleteEvent = itemView.findViewById(R.id.buttonDeleteEvent);
+            layoutDeletedActions = itemView.findViewById(R.id.layoutDeletedActions);
+            buttonRestoreEvent = itemView.findViewById(R.id.buttonRestoreEvent);
+            buttonPermanentDeleteEvent = itemView.findViewById(R.id.buttonPermanentDeleteEvent);
             progressBar = itemView.findViewById(R.id.eventProgressBar);
         }
     }

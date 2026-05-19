@@ -298,6 +298,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(cutoffTime)});
     }
 
+    // Permanently deletes an event from the database
+    public void permanentlyDeleteEvent(int eventId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_EVENTS,
+                COLUMN_EVENT_ID + "=?",
+                new String[]{String.valueOf(eventId)});
+    }
+
     // Returns active upcoming events for a user
     public List<Event> getUpcomingEventsByUser(int userId) {
         List<Event> events = new ArrayList<>();

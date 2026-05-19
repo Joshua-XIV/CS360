@@ -18,6 +18,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -37,6 +39,11 @@ import java.util.List;
 public class EventDisplayActivity extends AppCompatActivity {
     private static final int SMS_PERMISSION_CODE = 100;
     private static final int NOTIFICATION_PERMISSION_CODE = 101;
+
+    private static final int FILTER_UPCOMING = 0;
+    private static final int FILTER_PAST = 1;
+    private static final int FILTER_DELETED = 2;
+
     private RecyclerView recycleViewEvents;
     private FloatingActionButton addEvent;
     private DatabaseHelper databaseHelper;
@@ -45,6 +52,10 @@ public class EventDisplayActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ImageButton buttonMenu;
+    private RadioGroup radioEventFilter;
+    private TextView textEmptyTitle, textEmptySubtitle;
+
+    private int currentFilter = FILTER_UPCOMING;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +67,14 @@ public class EventDisplayActivity extends AppCompatActivity {
 
         recycleViewEvents = findViewById(R.id.recyclerViewEvents);
         addEvent = findViewById(R.id.fabAddEvent);
+        layoutEmptyState = findViewById(R.id.layoutEmptyState);
+        radioEventFilter = findViewById(R.id.radioEventFilter);
+        textEmptyTitle = findViewById(R.id.textEmptyTitle);
+        textEmptySubtitle = findViewById(R.id.textEmptySubtitle);
 
         recycleViewEvents.setLayoutManager(new GridLayoutManager(this, 1));
-        layoutEmptyState = findViewById(R.id.layoutEmptyState);
+
+        setupEventFilter();
 
         // Loads all events
         loadEvents();
@@ -96,6 +112,7 @@ public class EventDisplayActivity extends AppCompatActivity {
 
         // Displays the username in the nav menu
         navigationView.getMenu().findItem(R.id.menu_username).setTitle(sessionManager.getUsername());
+
         // Request permissions
         checkSmsPermission();
         checkNotificationPermission();
@@ -108,14 +125,61 @@ public class EventDisplayActivity extends AppCompatActivity {
         loadEvents();
     }
 
-    // Loads all events for current user and updates empty state
+    // Sets up upcoming, past, and deleted event filters
+    private void setupEventFilter() {
+        radioEventFilter.check(R.id.radioUpcoming);
+
+        radioEventFilter.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.radioUpcoming) {
+                currentFilter = FILTER_UPCOMING;
+                addEvent.setVisibility(View.VISIBLE);
+            } else if (checkedId == R.id.radioPast) {
+                currentFilter = FILTER_PAST;
+                addEvent.setVisibility(View.VISIBLE);
+            } else if (checkedId == R.id.radioDeleted) {
+                currentFilter = FILTER_DELETED;
+                addEvent.setVisibility(View.GONE);
+            }
+
+            loadEvents();
+        });
+    }
+
+    // Loads events for the selected filter and updates empty state
     private void loadEvents() {
+        databaseHelper.deleteExpiredDeletedEvents();
+
         int userId = sessionManager.getUserId();
-        List<Event> events = databaseHelper.getEventsByUser(userId);
-        EventAdapter adapter = new EventAdapter(events, databaseHelper, this::loadEvents);
+        List<Event> events;
+
+        if (currentFilter == FILTER_PAST) {
+            events = databaseHelper.getPastEventsByUser(userId);
+        } else if (currentFilter == FILTER_DELETED) {
+            events = databaseHelper.getDeletedEventsByUser(userId);
+        } else {
+            events = databaseHelper.getUpcomingEventsByUser(userId);
+        }
+
+        EventAdapter adapter = new EventAdapter(events, databaseHelper, this::loadEvents, currentFilter == FILTER_DELETED);
         recycleViewEvents.setAdapter(adapter);
 
-        if (events.isEmpty()) {
+        updateEmptyState(events.isEmpty());
+    }
+
+    // Shows proper empty state text based on selected filter
+    private void updateEmptyState(boolean isEmpty) {
+        if (currentFilter == FILTER_PAST) {
+            textEmptyTitle.setText("No past events");
+            textEmptySubtitle.setText("Completed events will show here");
+        } else if (currentFilter == FILTER_DELETED) {
+            textEmptyTitle.setText("No deleted events");
+            textEmptySubtitle.setText("Deleted events will stay here for 24 hours");
+        } else {
+            textEmptyTitle.setText(getString(R.string.no_events));
+            textEmptySubtitle.setText(getString(R.string.add_hint));
+        }
+
+        if (isEmpty) {
             layoutEmptyState.setVisibility(View.VISIBLE);
             recycleViewEvents.setVisibility(View.GONE);
         } else {
