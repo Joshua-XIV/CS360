@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "eventtracker.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     // Users table
     public static final String TABLE_USERS = "users";
@@ -48,6 +48,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_EVENT_TIMESTAMP = "timestamp";
     public static final String COLUMN_EVENT_USER_ID = "user_id";
     public static final String COLUMN_EVENT_DELETED = "deleted";
+    public static final String COLUMN_EVENT_DELETED_AT = "deletedAt";
+    public static final long DELETED_EVENT_RETENTION_MS = 24L * 60 * 60 * 1000;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -69,7 +71,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_EVENT_DESC + " TEXT, " +
                 COLUMN_EVENT_TIMESTAMP + " INTEGER, " +
                 COLUMN_EVENT_USER_ID + " INTEGER, " +
-                COLUMN_EVENT_DELETED + " INTEGER DEFAULT 0)";
+                COLUMN_EVENT_DELETED + " INTEGER DEFAULT 0, " +
+                COLUMN_EVENT_DELETED_AT + " INTEGER DEFAULT NULL" +
+                ")";
 
         db.execSQL(createUsers);
         db.execSQL(createEvents);
@@ -77,9 +81,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_EVENTS);
-        onCreate(db);
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE " + TABLE_EVENTS +
+                    " ADD COLUMN " + COLUMN_EVENT_DELETED + " INTEGER DEFAULT 0");
+        }
+
+        if (oldVersion < 3) {
+            db.execSQL("ALTER TABLE " + TABLE_USERS +
+                    " ADD COLUMN " + COLUMN_PHONE + " TEXT");
+        }
+
+        if (oldVersion < 4) {
+            db.execSQL("ALTER TABLE " + TABLE_EVENTS +
+                    " ADD COLUMN " + COLUMN_EVENT_DELETED_AT + " INTEGER DEFAULT NULL");
+        }
     }
 
     // Returns true if a user with the given
@@ -236,6 +251,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_EVENT_TIMESTAMP, timestamp);
         values.put(COLUMN_EVENT_USER_ID, userId);
         values.put(COLUMN_EVENT_DELETED, 0);
+        values.putNull(COLUMN_EVENT_DELETED_AT);
         return db.insert(TABLE_EVENTS, null, values);
     }
 
@@ -254,8 +270,119 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_EVENT_DELETED, 1);
+        values.putNull(COLUMN_EVENT_DELETED_AT);
+
         db.update(TABLE_EVENTS, values, COLUMN_EVENT_ID + "=?",
                 new String[]{String.valueOf(eventId)});
+    }
+
+    // Restores a soft deleted event
+    public void restoreEvent(int eventId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_EVENT_DELETED, 0);
+        values.putNull(COLUMN_EVENT_DELETED_AT);
+
+        db.update(TABLE_EVENTS, values, COLUMN_EVENT_ID + "=?",
+                new String[]{String.valueOf(eventId)});
+    }
+
+    // Permanently deletes soft deleted events older than 24 hours
+    public void deleteExpiredDeletedEvents() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long cutoffTime = System.currentTimeMillis() - DELETED_EVENT_RETENTION_MS;
+
+        db.delete(TABLE_EVENTS,
+                COLUMN_EVENT_DELETED + "=1 AND " + COLUMN_EVENT_DELETED_AT + " IS NOT NULL AND " +
+                        COLUMN_EVENT_DELETED_AT + "<=?",
+                new String[]{String.valueOf(cutoffTime)});
+    }
+
+    // Returns active upcoming events for a user
+    public List<Event> getUpcomingEventsByUser(int userId) {
+        List<Event> events = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        long now = System.currentTimeMillis();
+
+        Cursor cursor = db.query(TABLE_EVENTS,
+                null,
+                COLUMN_EVENT_USER_ID + "=? AND " + COLUMN_EVENT_DELETED + "=0 AND " +
+                        COLUMN_EVENT_TIMESTAMP + ">=?",
+                new String[]{String.valueOf(userId), String.valueOf(now)},
+                null, null,
+                COLUMN_EVENT_TIMESTAMP + " ASC");
+
+        while (cursor.moveToNext()) {
+            Event event = new Event(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_EVENT_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EVENT_TITLE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EVENT_DESC)),
+                    cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_EVENT_TIMESTAMP)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_EVENT_USER_ID))
+            );
+            events.add(event);
+        }
+
+        cursor.close();
+        return events;
+    }
+
+    // Returns active past events for a user
+    public List<Event> getPastEventsByUser(int userId) {
+        List<Event> events = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        long now = System.currentTimeMillis();
+
+        Cursor cursor = db.query(TABLE_EVENTS,
+                null,
+                COLUMN_EVENT_USER_ID + "=? AND " + COLUMN_EVENT_DELETED + "=0 AND " +
+                        COLUMN_EVENT_TIMESTAMP + "<?",
+                new String[]{String.valueOf(userId), String.valueOf(now)},
+                null, null,
+                COLUMN_EVENT_TIMESTAMP + " DESC");
+
+        while (cursor.moveToNext()) {
+            Event event = new Event(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_EVENT_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EVENT_TITLE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EVENT_DESC)),
+                    cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_EVENT_TIMESTAMP)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_EVENT_USER_ID))
+            );
+            events.add(event);
+        }
+
+        cursor.close();
+        return events;
+    }
+
+    // Returns soft deleted events for a user
+    public List<Event> getDeletedEventsByUser(int userId) {
+        List<Event> events = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_EVENTS,
+                null,
+                COLUMN_EVENT_USER_ID + "=? AND " + COLUMN_EVENT_DELETED + "=1",
+                new String[]{String.valueOf(userId)},
+                null, null,
+                COLUMN_EVENT_DELETED_AT + " DESC");
+
+        while (cursor.moveToNext()) {
+            Event event = new Event(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_EVENT_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EVENT_TITLE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EVENT_DESC)),
+                    cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_EVENT_TIMESTAMP)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_EVENT_USER_ID))
+            );
+            events.add(event);
+        }
+
+        cursor.close();
+        return events;
     }
 
     // Generates a random 16 byte salt that is encoded
