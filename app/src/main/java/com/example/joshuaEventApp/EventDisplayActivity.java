@@ -190,6 +190,13 @@ public class EventDisplayActivity extends AppCompatActivity {
 
     // Requests SMS permissions if the user hasn't been asked
     private void checkSmsPermission() {
+        String phone = databaseHelper.getPhone(sessionManager.getUsername());
+
+        // User already configured SMS previously
+        if (phone != null && !phone.trim().isEmpty()) {
+            return;
+        }
+
         if (sessionManager.hasSmsBeenAsked()) return;
 
         sessionManager.setSmsAsked();
@@ -255,7 +262,7 @@ public class EventDisplayActivity extends AppCompatActivity {
         // Prompt for phone number if permission is granted
         if (requestCode == SMS_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                showPhoneNumberDialog();
+                checkPhoneNumber();
             }
         }  // app should just continue regardless
 
