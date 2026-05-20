@@ -270,7 +270,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_EVENT_DELETED, 1);
-        values.putNull(COLUMN_EVENT_DELETED_AT);
+        values.put(COLUMN_EVENT_DELETED_AT, System.currentTimeMillis());
 
         db.update(TABLE_EVENTS, values, COLUMN_EVENT_ID + "=?",
                 new String[]{String.valueOf(eventId)});

@@ -34,7 +34,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private final List<Event> eventList;
     private final DatabaseHelper databaseHelper;
     private final OnEventDeletedListener deleteListener;
-    private boolean isDeletedMode;
+    private final boolean isDeletedMode;
 
     public EventAdapter(List<Event> eventList, DatabaseHelper databaseHelper,
                         OnEventDeletedListener deleteListener, boolean isDeletedMode) {
