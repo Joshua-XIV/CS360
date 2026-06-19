@@ -151,7 +151,7 @@ public class SettingsActivity extends AppCompatActivity {
             checkedItems[i] = savedOffsets.contains(String.valueOf(reminderValues[i]));
         }
 
-        AlertDialog reminderDiaglog = new AlertDialog.Builder(this)
+        AlertDialog reminderDialog = new AlertDialog.Builder(this)
                 .setTitle("Reminder Times")
                 .setMultiChoiceItems(reminderLabels, checkedItems,
                         (dialog, which, isChecked) -> checkedItems[which] = isChecked)
@@ -167,9 +167,9 @@ public class SettingsActivity extends AppCompatActivity {
                 .setNegativeButton("Cancel", null)
                 .create();
 
-        reminderDiaglog.show();
-        reminderDiaglog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.text_color_primary));
-        reminderDiaglog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.error_red));
+        reminderDialog.show();
+        reminderDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.text_color_primary));
+        reminderDialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.error_red));
     }
 
     // Cancels and recreates reminders for all current user's events

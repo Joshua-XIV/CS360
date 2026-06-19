@@ -18,6 +18,9 @@ import java.util.Locale;
  */
 public class SmsScheduler {
     private static final int MAX_REMINDER_SLOTS = 6;
+    // Multiplier separates event IDs so reminder slots 0-5 don't overlap between events
+    private static final int SMS_REQUEST_CODE_MULTIPLIER = 10;
+    private static final int NOTIFICATION_REQUEST_CODE_MULTIPLIER = 100;
 
     // Schedules all SMS and notification reminders for a specific event
     public static void scheduleReminder(Context context, int eventId, String eventTitle, long eventTimestamp, String phone) {
@@ -150,10 +153,10 @@ public class SmsScheduler {
     }
 
     private static int getSmsRequestCode(int eventId, int reminderIndex) {
-        return eventId * 10 + reminderIndex;
+        return eventId * SMS_REQUEST_CODE_MULTIPLIER + reminderIndex;
     }
 
     private static int getNotificationRequestCode(int eventId, int reminderIndex) {
-        return eventId * 100 + reminderIndex;
+        return eventId * NOTIFICATION_REQUEST_CODE_MULTIPLIER + reminderIndex;
     }
 }
