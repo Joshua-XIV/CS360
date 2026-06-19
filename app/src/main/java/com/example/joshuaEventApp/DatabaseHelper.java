@@ -265,7 +265,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.update(TABLE_EVENTS, values, COLUMN_EVENT_ID + "=?", new String[]{String.valueOf(eventId)});
     }
 
-    // Soft deletes an event by setting the deleted flag in the user table to 1
+    // Soft deletes an event by setting the deleted flag in the events table to 1
     public void deleteEvent(int eventId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
